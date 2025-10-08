@@ -34,6 +34,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/owner", ownerRoutes);
 app.use("/api/hotel", hotelRoutes);
 app.use("/api/staff", staffRoutes);
+// testing...
 
 // serve uploaded files
 
