@@ -21,7 +21,7 @@ const Admins = () => {
     admin_status: true,
   });
 
-  // adminpaneldfghjsdfgh
+  // adminpaneldfghjsdfghdfghjk
 
   // Fetch Admins API
   const fetchAdmins = async () => {
