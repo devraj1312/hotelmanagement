@@ -1,0 +1,35 @@
+@use './variables' as *;
+
+.booking-container {
+  // background-color: $color-surface; 
+  // padding: 30px;
+  // border-radius: 10px;
+
+  h2 {
+    color: $color-text; // ✅ dark text color
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    background: $color-surface; // ✅ white table background
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+
+    th,
+    td {
+      padding: 12px 16px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: $color-primary; // ✅ navy blue header
+      color: $color-surface; // ✅ white text
+      font-weight: 600;
+    }
+  }
+}

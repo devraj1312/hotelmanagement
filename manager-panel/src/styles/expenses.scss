@@ -1,0 +1,65 @@
+@use './variables' as *;
+
+.expense-container {
+
+  .expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      color: $color-text; // ✅ dark text color
+    }
+  }
+
+  table {
+    width: 100%;
+    background: $color-surface; // ✅ white background
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+
+    th,
+    td {
+      padding: 12px 16px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: $color-primary; // ✅ navy blue header
+      color: $color-surface; // ✅ white text
+      font-weight: 600;
+    }
+  }
+}
+
+.expense-form-container {
+  background: $color-surface; // ✅ white/light background
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    color: $color-text; // ✅ dark text color
+    margin-bottom: 20px;
+  }
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  input,
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid $color-border; // ✅ use border color from variables
+    font-size: 16px;
+  }
+}

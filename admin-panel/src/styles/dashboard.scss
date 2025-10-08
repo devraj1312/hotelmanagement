@@ -1,0 +1,58 @@
+@use './variables' as *;
+
+.dashboard-page {
+  background-color: $color-background;
+  color: $color-text;
+  font-family: $font-primary;
+  padding: 20px;
+
+  .summary-card {
+    background-color: $color-surface;
+    border-radius: 8px;
+    height: 100px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    .card-icon {
+      font-size: 2rem;
+    }
+
+    .card-info {
+      h3 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+      p {
+        margin: 0;
+        color: $color-muted;
+      }
+    }
+  }
+
+  .chart-card {
+    background-color: $color-surface;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    padding: 15px;
+
+    h5 {
+      margin-bottom: 15px;
+    }
+
+    /* Compact chart size */
+    canvas {
+      max-height: 300px !important; // height limit for chart
+    }
+  }
+
+  .activity-box {
+    background-color: $color-surface;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding: 15px;
+  }
+}

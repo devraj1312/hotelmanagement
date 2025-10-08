@@ -1,0 +1,37 @@
+$font-primary:  'Segoe UI', sans-serif;
+
+// $color-cream: #fffaf0;
+// $color-golden: #00d1b2;
+// $color-khaki: #1f2f46;
+// $color-green: #708238;
+// $color-dark-brown: #4e2c13;
+
+// $color-primary: #1f2f46;     
+// $color-accent: #00bfa6;       
+// $color-background: #f5f7fa;   
+// $color-text: #333333;        
+// $color-border: #e0e0e0;       
+
+// Primary Colors
+$color-primary: #1f2f46;     // Navy Blue - Header, Sidebar, update buttons
+$color-accent: #00bfa6;      // Teal - Add buttons, highlights, links
+
+// Background & Surface
+$color-background: #f5f7fa;  // Light Gray/White - Page background
+$color-surface: #ffffff;     // White - Text on buttons/cards
+
+// Text Colors
+$color-text: #333333;        // Dark Gray - Default text
+$color-muted: #6b7280;       // Muted Gray - Placeholder or secondary text
+
+// Borders & States
+$color-border: #e0e0e0;      // Light Gray - Borders, dividers
+$color-hover: #00d1b2;       // Slightly brighter teal for hover states
+
+// Action Colors
+$color-danger: #ef4444;      // Red - Delete or logout buttons
+$color-success: #22c55e;     // Green - Success messages or badges
+
+
+$sidebar-width: 300px;
+$header-height: 60px;

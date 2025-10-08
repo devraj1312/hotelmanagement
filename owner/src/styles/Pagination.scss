@@ -1,0 +1,36 @@
+@use './variables' as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 6px;
+  flex-wrap: wrap;
+
+  .pagination-btn {
+    padding: 6px 12px;
+    border: 1px solid $color-border;
+    background-color: white;
+    color: $color-primary;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      background-color: $color-accent;
+      color: white;
+    }
+
+    &.active {
+      background-color: $color-primary;
+      color: white;
+      font-weight: bold;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}

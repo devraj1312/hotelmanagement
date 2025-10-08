@@ -1,0 +1,45 @@
+@use './variables' as *;
+@use 'sass:color';
+
+.staff-page {
+  h2 {
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+
+  table {
+    th {
+      background-color: $color-primary;
+      color: $color-background;
+    }
+    td {
+      vertical-align: middle;
+      color: $color-text;
+    }
+    border-color: $color-border;
+  }
+
+  .btn-success {
+    background-color: $color-accent;
+    border-color: $color-accent;
+
+    &:hover {
+      background-color: color.scale($color-accent, $lightness: -10%);
+      border-color: color.scale($color-accent, $lightness: -10%);
+    }
+  }
+
+  .btn-danger {
+    background-color: $color-primary;
+    border-color: $color-primary;
+
+    &:hover {
+      background-color: color.scale($color-primary, $lightness: -10%);
+      border-color: color.scale($color-primary, $lightness: -10%);
+    }
+  }
+
+  .table {
+    border: 1px solid $color-border;
+  }
+}

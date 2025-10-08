@@ -1,0 +1,73 @@
+@use './variables' as *;
+
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+
+  .card-box {
+    flex: 1;
+    background-color: $color-surface; // ✅ white card background
+    border-left: 5px solid $color-primary; // ✅ navy accent border
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    h4 {
+      font-size: 16px;
+      color: $color-text; // ✅ dark text
+    }
+
+    p {
+      font-size: 24px;
+      font-weight: bold;
+      color: $color-text; // ✅ dark text
+    }
+  }
+}
+
+.chart-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 30px 0;
+
+  .chart-box {
+    flex: 1 1 30%;
+    min-width: 280px;
+    max-width: 100%;
+    background-color: $color-surface; // ✅ white background
+    border: 1px solid $color-border; // ✅ light gray border
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+
+    h5 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      color: $color-text; // ✅ dark text
+      font-weight: 600;
+    }
+
+    canvas {
+      max-height: 220px;
+    }
+  }
+}
+
+.activity-list {
+  margin-top: 30px;
+  background-color: $color-surface; // ✅ white background
+  padding: 20px;
+  border-left: 4px solid $color-accent; // ✅ teal accent border
+  border-radius: 8px;
+
+  ul {
+    padding-left: 20px;
+
+    li {
+      margin-bottom: 10px;
+      color: $color-text; // ✅ dark text
+    }
+  }
+}

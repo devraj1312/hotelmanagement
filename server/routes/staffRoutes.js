@@ -1,0 +1,13 @@
+import express from "express";
+import { addStaff, fetchStaffs, updateStaff } from "../controllers/staff/staffController.js";
+// import { verifyOwner } from "../middlewares/authMiddleware.js";
+// import { upload } from "../middlewares/uploadMiddleware.js";
+
+const router = express.Router();
+
+// Add staff (with optional document upload)
+router.post("/register", addStaff);
+router.get("/fetch", fetchStaffs);
+router.put("/update/:id", updateStaff);
+
+export default router;

@@ -1,0 +1,39 @@
+@use './variables' as *;
+@use 'sass:color';
+
+.tickets-page {
+  h2 {
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+
+  table {
+    th {
+      background-color: $color-primary;
+      color: $color-surface;
+    }
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  .btn-primary {
+    background-color: $color-accent;
+    border-color: $color-accent;
+
+    &:hover {
+      background-color: color.scale($color-accent, $lightness: -10%);
+      border-color: color.scale($color-accent, $lightness: -10%);
+    }
+  }
+
+  .btn-success {
+    background-color: $color-success;
+    border-color: $color-success;
+
+    &:hover {
+      background-color: color.scale($color-success, $lightness: -10%);
+      border-color: color.scale($color-success, $lightness: -10%);
+    }
+  }
+}

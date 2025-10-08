@@ -1,0 +1,72 @@
+@use './variables' as *;
+@use 'sass:color';
+
+.clients-page {
+  h2 {
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+
+  table {
+    th {
+      background-color: $color-primary;
+      color: $color-surface;
+    }
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  // Activate button
+  .btn-success {
+    background-color: $color-accent;
+    border-color: $color-accent;
+
+    &:hover {
+      background-color: color.scale($color-accent, $lightness: -10%);
+      border-color: color.scale($color-accent, $lightness: -10%);
+    }
+  }
+
+  // Deactivate button
+  .btn-danger {
+    background-color: $color-danger;
+    border-color: $color-danger;
+
+    &:hover {
+      background-color: color.scale($color-danger, $lightness: -10%);
+      border-color: color.scale($color-danger, $lightness: -10%);
+    }
+  }
+
+  // View Document button
+  .btn-info {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: $color-surface;
+
+    &:hover {
+      background-color: color.scale($color-primary, $lightness: -10%);
+      border-color: color.scale($color-primary, $lightness: -10%);
+    }
+  }
+}
+
+/* ✅ Fullscreen Image Modal */
+.image-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  cursor: zoom-out;
+
+  .image-full {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+}

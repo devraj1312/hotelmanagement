@@ -1,0 +1,70 @@
+@use './variables' as *;
+
+.staff-container {
+  // background: $color-surface; 
+  // padding: 30px;
+  // border-radius: 10px;
+
+  .staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      color: $color-text; // ✅ dark text
+    }
+  }
+
+  table {
+    width: 100%;
+    background: $color-surface; // ✅ white background
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+
+    th,
+    td {
+      padding: 12px 16px;
+      text-align: center;
+      vertical-align: middle; 
+      color: $color-text; // ✅ text color
+    }
+
+    th {
+      background-color: $color-primary;  // ✅ header accent color
+      color: $color-surface; // ✅ white text
+      font-weight: 600;
+    }
+  }
+}
+
+.staff-form-container {
+  background: $color-surface; // ✅ light background
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    color: $color-text; // ✅ dark text
+    margin-bottom: 20px;
+  }
+}
+
+.staff-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  input,
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid $color-border; // ✅ border color
+    font-size: 1rem;
+    color: $color-text;
+  }
+}

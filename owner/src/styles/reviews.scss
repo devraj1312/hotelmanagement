@@ -1,0 +1,58 @@
+@use './variables' as *;
+
+.reviews-page {
+  padding: 20px;
+  font-family: $font-primary;
+
+  h2 {
+    font-size: 24px;
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+}
+
+.review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.review-card {
+  background: white;
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: $color-primary;
+  }
+
+  p {
+    font-size: 14px;
+    color: #444;
+    margin: 10px 0;
+  }
+
+  small {
+    font-size: 12px;
+    color: #777;
+  }
+}
+
+.star-rating {
+  margin-bottom: 6px;
+
+  i {
+    font-size: 18px;
+    color: #ccc;
+  }
+
+  .filled {
+    color: $color-accent;
+  }
+}

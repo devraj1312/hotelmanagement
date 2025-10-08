@@ -1,0 +1,188 @@
+@use './variables' as *;
+
+/* ===============================
+   🧱 Base Styles
+================================== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-primary !important;
+}
+
+/* ===============================
+   📦 Layout Wrapper
+================================== */
+.manager-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: $color-background; // ✅ same as admin layout
+  padding-top: $header-height;
+}
+
+/* ===============================
+   🎯 Sidebar
+================================== */
+.sidebar {
+  width: $sidebar-width;
+  background: $color-primary; // ✅ use primary navy blue
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding: 10px 15px;
+
+  .sidebar-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    background-color: $color-accent; // ✅ teal accent for highlight
+    color: #fff;
+    padding: 12px 16px;
+    border-left: 5px solid $color-hover; // ✅ use hover teal for border accent
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .sidebar-menu {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 20px;
+
+      a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background-color: $color-surface; // ✅ white surface
+        color: $color-primary;
+        border: 2px solid $color-primary;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: $color-hover; // ✅ hover teal
+          color: $color-surface;
+          border-color: $color-hover;
+        }
+
+        &.active {
+          background-color: $color-hover; // ✅ active state hover teal
+          color: $color-surface;
+          font-weight: bold;
+          border-color: $color-hover;
+        }
+      }
+    }
+  }
+}
+
+/* ===============================
+   🔝 Header
+================================== */
+.header {
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  height: $header-height;
+  background: $color-background; // ✅ same as admin header
+  color: $color-text;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $color-border; // ✅ same as admin header
+  z-index: 1000;
+
+  .hotel-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: $color-text;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    .datetime {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 16px;
+      color: $color-text;
+    }
+
+    .manager-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: $color-text;
+    }
+
+    .logout-btn {
+      background-color: $color-surface;
+      color: $color-text;
+      border: 2px solid $color-border;
+      padding: 6px 14px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        background-color: $color-text;
+        color: $color-surface;
+      }
+    }
+  }
+}
+
+/* ===============================
+   📄 Main Content
+================================== */
+.page-content {
+  flex: 1;
+  padding: 25px;
+  // background-image: url('/images/managerBG.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 1;
+  overflow-x: hidden;
+}
+
+/* ===============================
+   📄 Footer
+================================== */
+.app-footer {
+  background-color: $color-accent; // ✅ teal accent
+  border-top: 1px solid $color-border;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+  color: $color-surface;
+
+  .footer-content {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .tagline {
+    font-style: italic;
+    color: $color-hover; // ✅ slightly brighter teal accent
+  }
+}

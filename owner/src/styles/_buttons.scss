@@ -1,0 +1,54 @@
+@use 'sass:color';
+@use './variables' as *;
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+
+  &.btn-add {
+    background-color: $color-accent;
+
+    &:hover {
+      background-color: $color-primary;
+    }
+  }
+
+  &.btn-edit {
+    color: white;
+    background-color: #17a2b8;
+    padding: 4px 20px;
+
+    &:hover {
+      background-color: #17a2b8;
+    }
+  }
+
+  &.btn-update {
+    background-color: #007bff;
+    padding: 10px 20px;
+    color: white;
+
+    &:hover {
+      background-color: color.adjust(#007bff, $lightness: -10%);
+    }
+  }
+
+  &.btn-delete {
+    background-color: red;
+    padding: 10px 20px;
+    color: white;
+
+    &:hover {
+      background-color: color.adjust(#007bff, $lightness: -10%);
+    }
+  }
+}

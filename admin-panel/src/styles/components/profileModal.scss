@@ -1,0 +1,45 @@
+// @use "../variables" as *;
+// @use "./modal";
+// @use "sass:color"; 
+
+// /* ================= PROFILE MODAL STYLES ================= */
+// .profile-modal {
+//   text-align: center;
+
+//   .profile-avatar {
+//     width: 100px;
+//     height: 100px;
+//     border-radius: 50%;
+//     border: 2px solid $color-accent;
+//     margin: 0 auto 15px;
+//     display: block;
+//     object-fit: cover;
+//     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+//   }
+
+//   .profile-name {
+//     font-size: 18px;
+//     font-weight: 600;
+//     color: $color-text;
+//     margin-bottom: 5px;
+//   }
+
+//   .profile-email {
+//     font-size: 14px;
+//     color: color.scale($color-text, $lightness: -20%);
+//     margin-bottom: 15px;
+//   }
+
+//   .profile-info {
+//     font-size: 14px;
+//     color: $color-text;
+//     line-height: 1.5;
+//   }
+
+//   /* Optional divider line */
+//   .divider {
+//     margin: 15px 0;
+//     height: 1px;
+//     background: $color-border;
+//   }
+// }

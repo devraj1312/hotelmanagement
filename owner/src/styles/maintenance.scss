@@ -1,0 +1,63 @@
+@use './variables' as *;
+
+.maintenance-page {
+  padding: 20px;
+  font-family: $font-primary;
+
+  h2 {
+    font-size: 24px;
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+}
+
+.maintenance-list-container {
+  background: white;
+  border: 1px solid $color-border;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  overflow-x: auto;
+}
+
+.maintenance-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid $color-border;
+    text-align: left;
+    font-size: 15px;
+  }
+
+  th {
+    background-color: $color-background;
+    color: $color-primary;
+  }
+
+  td {
+    color: #333;
+  }
+}
+
+.maintenance-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  color: white;
+}
+
+.badge-pending {
+  background-color: #ffc107;
+}
+
+.badge-progress {
+  background-color: #17a2b8;
+}
+
+.badge-resolved {
+  background-color: #28a745;
+}

@@ -1,0 +1,47 @@
+@use './variables' as *;
+
+.settings-section {
+  background-color: $color-surface;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+
+  h2 {
+    color: $color-text;
+    margin-bottom: 20px;
+  }
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  label {
+    font-weight: bold;
+    color: $color-text;
+  }
+
+  input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid $color-border;
+    font-size: 1rem;
+    color: $color-text;
+  }
+
+  button {
+    background-color: $color-accent;
+    color: $color-surface;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $color-hover;
+    }
+  }
+}

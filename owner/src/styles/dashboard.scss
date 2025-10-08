@@ -1,0 +1,135 @@
+@use './variables' as *;
+
+.dashboard-page {
+  padding: 10px;
+  background-color: $color-background;
+  font-family: $font-primary;
+
+  .dashboard-row-inline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; // 3 equal columns
+    gap: 20px;
+    align-items: start;
+  }
+
+  .chart-box.small {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid $color-border;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    width: 460px;
+
+    h6 {
+      font-size: 16px;
+      color: $color-primary;
+      margin-bottom: 10px;
+    }
+
+    // canvas {
+    //   height: 260px !important;
+    // }
+  }
+
+  .card-grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // 2 columns
+    grid-template-rows: repeat(2, auto);   // 2 rows
+    gap: 20px;
+
+    .summary-card.small {
+      height: 130px;
+      background: white;
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+      border: 1px solid $color-border;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      i {
+        font-size: 26px;
+        margin-bottom: 8px;
+        color: $color-accent;
+      }
+
+      h6 {
+        font-size: 14px;
+        margin-bottom: 4px;
+        color: $color-primary;
+        font-weight: 600;
+      }
+
+      p {
+        font-size: 20px;
+        font-weight: bold;
+        color: $color-accent;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        height: auto;
+        padding: 16px 12px;
+      }
+    }
+  }
+
+  .dashboard-bottom-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // Two equal columns
+    gap: 20px;
+    margin-top: 30px;
+
+    .dashboard-box-container {
+      background: white;
+      border: 1px solid $color-border;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      height: 100%;
+      overflow-y: auto;
+
+      h6 {
+        color: $color-primary;
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 10px 0;
+          border-bottom: 1px solid $color-border;
+          font-size: 14px;
+
+          small {
+            color: #777;
+            font-size: 12px;
+          }
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+
+      .avg-rating {
+        font-weight: 600;
+        color: $color-accent;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

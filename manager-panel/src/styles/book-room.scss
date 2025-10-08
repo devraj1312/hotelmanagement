@@ -1,0 +1,45 @@
+@use './variables' as *;
+
+.book-room-container {
+  background: $color-surface; // ✅ use surface white for container
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 30px auto;
+
+  h2 {
+    color: $color-text; // ✅ use text color for heading
+    text-align: center;
+    margin-bottom: 25px;
+  }
+}
+
+.book-room-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  input,
+  select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid $color-border; // ✅ use border color
+    font-size: 16px;
+  }
+
+  button {
+    align-self: flex-end;
+    background-color: $color-accent; // ✅ highlight add button
+    color: $color-surface; // ✅ white text
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $color-hover; // ✅ hover state using brighter teal
+    }
+  }
+}

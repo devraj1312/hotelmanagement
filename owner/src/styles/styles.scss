@@ -1,0 +1,12 @@
+// @forward './variables';
+// @forward './layout';
+// @forward './components';
+// @forward './buttons';
+
+@use './variables' as *;
+@use './layout' as *;
+@use './components' as *;
+// @use './buttons' as *;
+* {
+  font-family: $font-primary;
+}

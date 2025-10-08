@@ -1,0 +1,90 @@
+@use './variables' as *;
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: $color-background;
+
+  .login-card {
+    background-color: $color-surface;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    h2 {
+      margin-bottom: 25px;
+      color: $color-primary;
+    }
+
+    .error-msg {
+      color: $color-danger;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+
+      label {
+        margin-bottom: 5px;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      input {
+        padding: 10px 15px;
+        border: 1px solid $color-border;
+        border-radius: 6px;
+        font-size: 1rem;
+
+        &:focus {
+          outline: none;
+          border-color: $color-accent;
+          box-shadow: 0 0 5px rgba(0,191,166,0.3);
+        }
+      }
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: $color-primary;
+      color: $color-surface;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $color-accent;
+      }
+    }
+  }
+}
+
+.tab-toggle {
+  display: flex; gap: 8px; margin: 10px 0 16px;
+  button { padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; background: #f6f6f6; cursor: pointer; }
+  .active { background: #111; color: #fff; }
+}
+.otp-pane .actions-row { margin: 8px 0 12px; }
+.otp-btn, .close-btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; background: #f6f6f6; cursor: pointer; }
+
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: #fff; width: 320px; border-radius: 12px; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal h3 { margin: 0 0 8px; }
+.otp-value { font-size: 28px; letter-spacing: 2px; font-weight: 700; text-align: center; margin: 12px 0; }
+.muted { color: #666; font-size: 12px; text-align: center; margin-bottom: 12px; }

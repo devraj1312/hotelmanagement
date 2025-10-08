@@ -1,0 +1,29 @@
+@use './variables' as *;
+
+.maintenance-container {
+
+  h2 {
+    color: $color-text; // ✅ dark text color
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    background: $color-surface; // ✅ white/light background
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: collapse; // ✅ ensure proper border styling
+
+    th, td {
+      padding: 10px;
+      vertical-align: middle;
+      color: $color-text; // ✅ dark text color
+    }
+
+    th {
+      background-color: $color-primary; // ✅ navy blue header
+      color: $color-surface; // ✅ white text
+      font-weight: 600;
+    }
+  }
+}

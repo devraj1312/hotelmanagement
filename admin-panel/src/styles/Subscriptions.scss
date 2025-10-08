@@ -1,0 +1,39 @@
+@use './variables' as *;
+@use 'sass:color';
+
+.subscriptions-page {
+  h2 {
+    color: $color-primary;
+    margin-bottom: 20px;
+  }
+
+  table {
+    th {
+      background-color: $color-primary;
+      color: $color-surface;
+    }
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  .btn-success {
+    background-color: $color-accent;
+    border-color: $color-accent;
+
+    &:hover {
+      background-color: color.scale($color-accent, $lightness: -10%);
+      border-color: color.scale($color-accent, $lightness: -10%);
+    }
+  }
+
+  .btn-danger {
+    background-color: $color-danger;
+    border-color: $color-danger;
+
+    &:hover {
+      background-color: color.scale($color-danger, $lightness: -10%);
+      border-color: color.scale($color-danger, $lightness: -10%);
+    }
+  }
+}
