@@ -1,9 +1,10 @@
 import express from "express";
-import { registerOwner, loginOwner, logoutOwner, getAllOwners,
-    toggleOwnerStatus, ownerDetailsById, } from "../controllers/owner/authController.js";
+import { registerOwner, loginOwner, logoutOwner, getAllOwners,uploadProfile, changePassword,
+    toggleOwnerStatus, ownerDetailsById, updateOwner} from "../controllers/owner/authController.js";
 // import { upload } from '../middlewares/uploadMiddleware.js';
 import { requestOtp, verifyOtp } from '../controllers/owner/otpController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
+import { upload, handleUploadErrors } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
@@ -11,8 +12,17 @@ const router = express.Router();
 router.post("/register", registerOwner);
 router.post('/login', loginOwner);
 router.post('/logout', logoutOwner);
-router.get('/fetch', getAllOwners);
-router.get('/details/:id', authMiddleware, ownerDetailsById);
+router.get('/fetch', getAllOwners); 
+router.get('/details/:id', ownerDetailsById);
+router.put(
+  "/upload-profile/:id",
+  upload.single("profile"),
+  handleUploadErrors,
+  uploadProfile
+);
+router.put("/update/:id", updateOwner);
+router.put("/change-password", changePassword);
+
 router.put('/toggle-status/:id', authMiddleware, toggleOwnerStatus);
 
 // ✅ OTP endpoints

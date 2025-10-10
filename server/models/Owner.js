@@ -4,24 +4,21 @@ import { generateOwnerId } from '../helpers/ownerHelpers.js';
 // ========================
 // Check if Owner exists by email, phone, or owner_id
 // ========================
-export const getExistingOwner = async ({ email, phone, owner_id, excludeId }) => {
-  const values = [email, phone, owner_id];
+export const getExistingOwner = async ({ email, phone, excludeId }) => {
+  const values = [email, phone];
   let query = `
     SELECT * FROM owners
-    WHERE (owner_email = $1 OR owner_phone = $2 OR owner_id = $3)
+    WHERE (owner_email = $1 OR owner_phone = $2)
   `;
 
   if (excludeId) {
-    query += ` AND owner_id != $4`;
+    query += ` AND owner_id != $3`;
     values.push(excludeId);
   }
 
   const result = await adminDB.query(query, values);
   return result.rows[0] || null;
 };
-
-
-
 
 // ========================
 // Create Owner
@@ -37,8 +34,6 @@ export const createOwner = async ({ name, phone, email, address, password, profi
   );
   return result.rows[0].owner_id;
 };
-
-
 
 // ========================
 // Get All Owners
@@ -57,14 +52,13 @@ export const getAllOwnersFromDB = async () => {
   }
 };
 
-
 // ========================
 // Get Owner by ID
 // ========================
 export const getOwnerById = async (id) => {
   try {
     const result = await adminDB.query(
-      `SELECT owner_id, owner_name, owner_email, owner_phone, owner_profile 
+      `SELECT owner_id, owner_name, owner_email, owner_phone, owner_profile, owner_address, owner_status
        FROM owners 
        WHERE owner_id = $1`,
       [id]
@@ -77,32 +71,51 @@ export const getOwnerById = async (id) => {
 };
 
 // ========================
+// Upload Owner
+// ========================
+export const updateOwnerProfile = async (owner_id, profilePath) => {
+  const query = `
+    UPDATE owners
+    SET owner_profile = $1, updated_at = NOW()
+    WHERE owner_id = $2
+    RETURNING owner_id, owner_profile
+  `;
+  const values = [profilePath, owner_id];
+
+  const result = await adminDB.query(query, values);
+  return result.rowCount ? result.rows[0] : null;
+};
+
+// ========================
 // Update Owner
 // ========================
-// export const updateOwnerInDB = async (id, { name, phone, email, address, documentType, document, profile }) => {
-//   let query, values;
+export const updateOwnerInDB = async (owner_id, { owner_name, owner_email, owner_phone, owner_address }) => {
+  const query = `
+    UPDATE owners
+    SET 
+      owner_name = $1,
+      owner_email = $2,
+      owner_phone = $3,
+      owner_address = $4,
+      updated_at = NOW()
+    WHERE owner_id = $5
+    RETURNING 
+      owner_id, 
+      owner_name, 
+      owner_email, 
+      owner_phone, 
+      owner_address, 
+      created_at, 
+      updated_at;
+  `;
 
-//   if (profile !== undefined) {
-//     query = `
-//       UPDATE owners 
-//       SET name=$1, phone=$2, email=$3, address=$4, document_type=$5, document=$6, profile=$7, updated_at=NOW()
-//       WHERE owner_id=$8
-//       RETURNING owner_id, name, phone, email, address, document_type, document, profile
-//     `;
-//     values = [name, phone, email, address, documentType, document, profile, id];
-//   } else {
-//     query = `
-//       UPDATE owners 
-//       SET name=$1, phone=$2, email=$3, address=$4, document_type=$5, document=$6, updated_at=NOW()
-//       WHERE owner_id=$7
-//       RETURNING owner_id, name, phone, email, address, document_type, document, profile
-//     `;
-//     values = [name, phone, email, address, documentType, document, id];
-//   }
+  const values = [owner_name, owner_email, owner_phone, owner_address, owner_id];
+  const result = await adminDB.query(query, values);
 
-//   const result = await adminDB.query(query, values);
-//   return result.rows[0];
-// };
+  return result.rowCount ? result.rows[0] : null;
+};
+
+
 
 // ========================
 // Toggle Owner Status
@@ -173,3 +186,14 @@ export const deleteRefreshToken = async (refreshToken) => {
 //     [hashedPassword, id]
 //   );
 // };
+
+// ✅ Find owner by phone
+export const findOwnerByPhone = async (phone) => {
+  const result = await adminDB.query("SELECT * FROM owners WHERE owner_phone = $1", [phone]);
+  return result.rows[0];
+};
+
+// ✅ Update password by phone
+export const updateOwnerPasswordByPhone = async (phone, hashedPassword) => {
+  await adminDB.query("UPDATE owners SET owner_password = $1 WHERE owner_phone = $2", [hashedPassword, phone]);
+};

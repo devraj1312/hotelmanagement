@@ -1,67 +1,146 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { Dropdown, Button, Modal } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import HotelModal from "./AddHotelModal"; // Corrected path assuming this is in the same directory
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+
+import AddHotelModal from "./AddHotelModal";
+import UploadProfileModal from "./UploadProfileModal";
+import ChangePasswordModal from "./ChangePasswordModal";
+import Register from "../pages/Register";
 
 const Header = () => {
   const [dateTime, setDateTime] = useState(new Date());
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showHotelModal, setShowHotelModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [owner, setOwner] = useState(null);
+  const [hasHotel, setHasHotel] = useState(false);
+  const [hotels, setHotels] = useState([]);
 
-  const hotels = ["Hotel Paradise", "Sunrise Inn", "Ocean View", "Mountain Lodge"];
-
+  // Update clock every second
   useEffect(() => {
     const interval = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
 
+  // Fetch hotels
+  const fetchHotels = useCallback(async (ownerId, token) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5001/api/hotel/fetch-hotels/${ownerId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
+      setHotels(res.data?.hotels || []);
+      setHasHotel((res.data?.hotels || []).length > 0);
+    } catch (err) {
+      console.error("❌ Failed to fetch hotels:", err);
+    }
+  }, []);
+
+  // Fetch owner + hotels
+  const fetchOwnerData = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) return;
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id;
+
+      const res = await axios.get(
+        `http://localhost:5001/api/owner/details/${ownerId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
+      setOwner(res.data);
+      await fetchHotels(ownerId, token);
+    } catch (err) {
+      console.error("❌ Failed to fetch owner or hotels:", err);
+    }
+  }, [fetchHotels]);
+
+  useEffect(() => {
+    fetchOwnerData();
+  }, [fetchOwnerData]);
+
   return (
-    <header className="header">
-      <h1 className="dashboard-title">Dashboard</h1>
+    <>
+      <header className="header">
+        <h1 className="dashboard-title">Owner Dashboard</h1>
 
-      <div className="header-center">
-        <input type="text" className="search-box" placeholder="Search..." />
-        <i className="bi bi-bell-fill notification-icon"></i>
-        <div className="datetime">
-          <i className="bi bi-calendar-event"></i>
-          <span>
-            {dateTime.toLocaleDateString()} | {dateTime.toLocaleTimeString()}
-          </span>
+        <div className="header-center">
+          <input type="text" className="search-box" placeholder="Search..." />
+          <i className="bi bi-bell-fill notification-icon"></i>
+
+          <div className="datetime">
+            <i className="bi bi-calendar-event"></i>
+            <span>
+              {dateTime.toLocaleDateString()} | {dateTime.toLocaleTimeString()}
+            </span>
+          </div>
+
+          <Dropdown>
+            <Dropdown.Toggle as={Button} variant="primary" size="lg" className="settings-btn">
+              <i className="bi bi-gear-fill"></i> Settings
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={() => setShowUploadModal(true)}>
+                Upload Profile
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setShowEditModal(true)}>
+                Update Details
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setShowChangePassword(true)}>
+                Change Password
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setShowHotelModal(true)}>
+                {hasHotel ? "Update Hotel" : "Add Hotel"}
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
+      </header>
 
-        <div className="hotel-dropdown-wrapper">
-          <button
-            className="hotel-btn"
-            onClick={() => setShowDropdown((prev) => !prev)}
-          >
-            Hotel +
-          </button>
+      {/* Upload Profile */}
+      <UploadProfileModal
+        show={showUploadModal}
+        handleClose={() => setShowUploadModal(false)}
+        owner={owner}
+        setOwner={setOwner}
+      />
 
-          {showDropdown && (
-            <ul className="hotel-dropdown">
-              {hotels.map((hotel, index) => (
-                <li key={index} className="hotel-item">
-                  {hotel}
-                </li>
-              ))}
-              <li
-                className="hotel-item add-hotel"
-                onClick={() => {
-                  setShowHotelModal(true);
-                  setShowDropdown(false);
-                }}
-              >
-                ➕ Add Hotel
-              </li>
-            </ul>
-          )}
-        </div>
-      </div>
+      {/* Update Owner Details */}
+      {showEditModal && owner && (
+        <Register
+          isUpdate={true}
+          owner={owner}
+          setOwner={setOwner}
+          handleClose={() => setShowEditModal(false)}
+        />
+      )}
 
-      <HotelModal
+      {/* Change Password */}
+      <ChangePasswordModal
+        show={showChangePassword}
+        handleClose={() => setShowChangePassword(false)}
+      />
+
+      {/* Add / Update Hotel */}
+      <AddHotelModal
         show={showHotelModal}
         handleClose={() => setShowHotelModal(false)}
+        owner={owner}
+        hasHotel={hasHotel}
+        existingHotel={hasHotel ? hotels[0] : null}
+        onHotelChange={fetchOwnerData}
       />
-    </header>
+    </>
   );
 };
 

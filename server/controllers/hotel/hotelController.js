@@ -4,6 +4,8 @@ import {
   getExistingHotel,
   getAllHotels,
   updateHotelById,
+  getHotelsByOwner,
+  updateHotel,
 //   getHotelById,
 } from "../../models/Hotel.js";
 
@@ -94,6 +96,84 @@ export const fetchAllHotels = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch hotels" });
   }
 };
+
+// ✅ Fetch all hotels for a specific owner
+export const fetchHotelsByOwner = async (req, res) => {
+  try {
+    const { ownerId } = req.params;
+
+    if (!ownerId) {
+      return res.status(400).json({ success: false, message: "Owner ID is required" });
+    }
+
+    const hotels = await getHotelsByOwner(ownerId);
+
+    if (!hotels.length) {
+      return res.status(200).json({
+        success: true,
+        message: "No hotels found for this owner",
+        hotels: [],
+      });
+    }
+
+    res.status(200).json({ success: true, hotels });
+  } catch (error) {
+    console.error("Error fetching hotels by owner:", error.message);
+    res.status(500).json({ success: false, message: "Failed to fetch owner hotels" });
+  }
+};
+
+// controllers/hotelController.js
+export const updateHotelByOwner = async (req, res) => {
+  const { ownerId } = req.params;
+  const { hotelName, hotelPhone, hotelAddress, hotelEmail } = req.body;
+
+  try {
+    // ✅ Validation
+    if (!hotelName || !hotelPhone || !hotelAddress || !hotelEmail) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+        // ✅ Validation checks
+    if (!isValidEmail(hotelEmail)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    if (!isValidPhone(hotelPhone)) {
+      return res.status(400).json({ message: "Phone must be 10 digits" });
+    }
+
+    // 🔍 Duplicate check
+     const existingHotel = await getExistingHotel({
+      hotel_email: hotelEmail,
+      hotel_phone: hotelPhone,
+      license_no: null,
+      excludeId: ownerId,
+    });
+
+    if (existingHotel) {
+      if (existingHotel.hotel_email === hotelEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
+      if (existingHotel.hotel_phone === hotelPhone) {
+        return res.status(400).json({ message: "Number already exists" });
+      }
+    }
+
+    // ✅ Call query function
+    const updatedHotel = await updateHotel({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail });
+
+    if (!updatedHotel) {
+      return res.status(404).json({ success: false, message: "Hotel not found for this owner" });
+    }
+
+    res.status(200).json({ success: true, hotel: updatedHotel });
+  } catch (error) {
+    console.error("Error updating hotel:", error);
+    res.status(500).json({ success: false, message: "Failed to update hotel" });
+  }
+};
+
 
 // export const fetchHotelById = async (req, res) => {
 //   try {

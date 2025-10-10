@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../styles/components/changePasswordModal.scss";
+import "../styles/components/profileModal.scss";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Button } from "react-bootstrap";

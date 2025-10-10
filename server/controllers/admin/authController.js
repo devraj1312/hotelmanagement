@@ -137,30 +137,6 @@ export const uploadProfile = async (req, res) => {
 };
 
 // ========================
-// Remove Admin Profile
-// ========================
-export const removeAdminProfile = async (req, res) => {
-  try {
-    const { id } = req.params; // admin_id like "AD001"
-
-    // ✅ Check if admin exists
-    const admin = await getAdminById(id);
-    if (!admin) return res.status(404).json({ message: "Admin not found" });
-
-    // ✅ Update admin_profile to NULL
-    const updatedAdmin = await updateAdminProfile(id, null);
-
-    res.json({
-      message: "Profile removed successfully",
-      admin: updatedAdmin,
-    });
-  } catch (error) {
-    console.error("❌ RemoveAdminProfile Error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// ========================
 // Get Current Admin
 // ========================
 export const adminDetailsById = async (req, res) => {
@@ -187,25 +163,21 @@ export const registerAdmin = async (req, res) => {
     console.log("➡️ Step 1: Input received", { admin_name, admin_phone, admin_email, admin_role });
 
     // ✅ Validation checks
-    console.log("➡️ Step 2: Validating email...");
     if (!isValidEmail(admin_email)) {
       console.error("❌ Invalid email format");
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    console.log("➡️ Step 3: Validating phone...");
     if (!isValidPhone(admin_phone)) {
       console.error("❌ Invalid phone format");
       return res.status(400).json({ message: "Phone must be 10 digits" });
     }
 
-    console.log("➡️ Step 4: Validating password...");
     if (!isValidPassword(admin_password)) {
       console.error("❌ Invalid password format");
       return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
-    console.log("➡️ Step 5: Checking if admin already exists...");
     const existingAdmin = await getExistingAdmin({ admin_email, admin_phone });
     console.log("✅ Existing admin check result:", existingAdmin);
 
@@ -220,11 +192,9 @@ export const registerAdmin = async (req, res) => {
       }
     }
 
-    console.log("➡️ Step 6: Hashing password...");
     const hashedPassword = await hashPassword(admin_password);
     console.log("✅ Password hashed");
 
-    console.log("➡️ Step 7: Creating admin in database...");
     const adminId = await createAdmin({
       admin_name,
       admin_phone,
@@ -262,7 +232,6 @@ export const getAllAdmins = async (req, res) => {
 // Update Admin
 // ========================
 export const updateAdmin = async (req, res) => {
-  console.log("🔥 req.body:", req.body);
   try {
     const { id } = req.params;
     const { admin_name, admin_email, admin_phone } = req.body;
@@ -270,7 +239,17 @@ export const updateAdmin = async (req, res) => {
     if (!admin_name || !admin_email || !admin_phone) {
       return res.status(400).json({ message: "All fields are required." });
     }
-    console.log("🔥 Query values:", { admin_email, admin_phone, excludeId: id });
+
+    // ✅ Validation checks
+    if (!isValidEmail(admin_email)) {
+      console.error("❌ Invalid email format");
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+    if (!isValidPhone(admin_phone)) {
+      console.error("❌ Invalid phone format");
+      return res.status(400).json({ message: "Phone must be 10 digits" });
+    }
+
     const existingAdmin = await getExistingAdmin({
       admin_email: req.body.admin_email,  // must be the new email
       admin_phone: req.body.admin_phone,
@@ -335,6 +314,11 @@ export const changePassword = async (req, res) => {
     const admin = await findAdminByPhone(phone);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found with this phone number." });
+    }
+
+    if (!isValidPassword(newPassword)) {
+      console.error("❌ Invalid password format");
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
     // ✅ Hash new password

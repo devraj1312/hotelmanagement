@@ -26,7 +26,7 @@
   height: $header-height;
   background: $color-background;
   color: $color-text;
-  padding: 15px 20px;
+  padding: 0 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,7 +41,7 @@
   .header-center {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 40px;
 
     .search-box {
       padding: 6px 10px;
@@ -61,8 +61,10 @@
     .datetime {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 10px;
+      font-size: 20px;
       color: $color-text;
+      font-weight: 500;
     }
 
     /* ✅ React-Bootstrap Dropdown Styling */
@@ -70,12 +72,12 @@
       .btn {
         display: flex;
         align-items: center;
-        gap: 8px;
-        background: $color-accent;
+        gap: 10px;
+        background: $color-primary;
         border: none;
         border-radius: 8px;
         padding: 6px 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: #fff;
         transition: background 0.2s ease;
       }
@@ -89,10 +91,12 @@
         .dropdown-item {
           padding: 10px 15px;
           font-size: 16px;
-          color: $color-text;
+          color: $color-primary;
+          font-weight: 600;
 
           &:hover {
-            background: $color-background;
+            background: $color-border;
+            // color: $color-surface;
           }
         }
       }

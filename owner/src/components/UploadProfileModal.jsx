@@ -4,31 +4,33 @@ import profile from "../assets/images/admin.jpg";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
+const UploadProfileModal = ({ show, handleClose, owner, setOwner }) => {
   const [preview, setPreview] = useState(
-    admin?.admin_profile
-      ? `http://localhost:5001${admin.admin_profile}`
+    owner?.owner_profile
+      ? `http://localhost:5001${owner.owner_profile}`
       : profile
   );
 
-  // ✅ Update preview when admin changes (prop-based)
+  // ✅ Update preview whenever owner data changes
   useEffect(() => {
     setPreview(
-      admin?.admin_profile
-        ? `http://localhost:5001${admin.admin_profile}`
+      owner?.owner_profile
+        ? `http://localhost:5001${owner.owner_profile}`
         : profile
     );
-  }, [admin]);
+  }, [owner]);
 
   if (!show) return null;
+
+  console.log("Current Owner:", owner);
 
   // 📤 Upload new profile
   const handleUpload = async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    if (!admin?.admin_id) {
-      toast.error("Admin ID not found.");
+    if (!owner?.owner_id) {
+      toast.error("Owner ID not found.");
       return;
     }
 
@@ -45,7 +47,7 @@ const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
       formData.append("profile", selectedFile);
 
       const res = await axios.put(
-        `http://localhost:5001/api/admin/upload-profile/${admin.admin_id}`,
+        `http://localhost:5001/api/owner/upload-profile/${owner.owner_id}`,
         formData,
         {
           headers: {
@@ -57,12 +59,12 @@ const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
       );
       toast.success(res.data.message);
 
-      setAdmin(res.data.admin);
+      setOwner(res.data.owner);
       setPreview(
-        res.data.admin?.admin_profile
-          ? `http://localhost:5001/${res.data.admin.admin_profile}`
-          : profile
-      );
+          res.data.owner?.owner_profile
+            ? `http://localhost:5001${res.data.owner.owner_profile}`
+            : profile
+        );
     } catch (err) {
       console.error("❌ Upload profile error:", err);
       toast.error(err.response?.data?.message || "Failed to upload profile.");
@@ -71,10 +73,11 @@ const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
 
   // ❌ Remove profile
   const handleRemove = async () => {
-    if (!admin?.admin_id) {
-      toast.error("Admin ID not found.");
+    if (!owner?.owner_id) {
+      toast.error("Owner ID not found.");
       return;
     }
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -83,7 +86,7 @@ const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
       }
 
       const res = await axios.put(
-        `http://localhost:5001/api/admin/upload-profile/${admin.admin_id}`,
+        `http://localhost:5001/api/owner/upload-profile/${owner.owner_id}`,
         {},
         {
           headers: {
@@ -92,9 +95,10 @@ const UploadProfileModal = ({ show, handleClose, admin, setAdmin }) => {
           withCredentials: true,
         }
       );
-      toast.success(res.data.message);
-      setAdmin(res.data.admin);
-      setPreview(profile); // fallback
+
+      toast.success(res.data.message || "Profile removed successfully.");
+      setOwner(res.data.owner);
+      setPreview(profile);
     } catch (err) {
       console.error("❌ Remove profile error:", err);
       toast.error(err.response?.data?.message || "Failed to remove profile.");

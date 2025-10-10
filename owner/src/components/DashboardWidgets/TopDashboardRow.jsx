@@ -9,10 +9,11 @@ import {
   LinearScale,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 } from 'chart.js';
 
-ChartJS.register(BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
+ChartJS.register(BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, Filler);
 
 const TopDashboardRow = () => {
   const revenueData = {

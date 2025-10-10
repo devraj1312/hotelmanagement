@@ -1,6 +1,7 @@
 import { 
-  getExistingOwner,createOwner,deleteRefreshToken, getAllOwnersFromDB, toggleOwnerStatusInDB, getOwnerById,
-  // findRefreshToken, updateOwnerInDB, removeOwner,saveRefreshToken
+  getExistingOwner,createOwner,deleteRefreshToken, getAllOwnersFromDB, toggleOwnerStatusInDB,
+  getOwnerById, updateOwnerProfile, findOwnerByPhone, updateOwnerPasswordByPhone, updateOwnerInDB,
+  // findRefreshToken, , removeOwner,saveRefreshToken
   //   updateOwnerPassword
 } from '../../models/Owner.js';
 
@@ -11,7 +12,7 @@ import { generateAccessToken, generateRefreshToken,
     // verifyRefreshToken 
 } from '../../utils/tokenUtils.js';
 import { isValidEmail, isValidPhone, isValidPassword } from '../../utils/validators.js';
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 // ========================
 // Login Owner
@@ -70,7 +71,6 @@ export const loginOwner = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 
 // ========================
 // Register Owner
@@ -146,8 +146,6 @@ export const registerOwner = async (req, res) => {
   }
 };
 
-
-
 // ========================
 // Logout Owner
 // ========================
@@ -175,7 +173,6 @@ export const logoutOwner = async (req, res) => {
   }
 };
 
-
 // ========================
 // Get Owner Details by ID
 // ========================
@@ -188,6 +185,39 @@ export const ownerDetailsById = async (req, res) => {
   } catch (error) {
     console.error('❌ OwnerDetailsById Error:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// ========================
+// Update Profile Picture
+// ========================
+export const uploadProfile = async (req, res) => {
+  try {
+    const { id } = req.params; 
+
+    let profilePath = null;
+
+    // Case 1: New file uploaded
+    if (req.file) {
+      profilePath = `/uploads/${req.file.filename}`;
+    }
+
+    // Case 2: No file uploaded → remove profile
+    const updatedOwner = await updateOwnerProfile(id, profilePath);
+
+    if (!updatedOwner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+
+    res.status(200).json({
+      message: profilePath
+        ? "Profile uploaded successfully!"
+        : "Profile removed successfully!",
+      owner: updatedOwner,
+    });
+  } catch (error) {
+    console.error("❌ Upload Profile Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -222,24 +252,63 @@ export const getAllOwners = async (req, res) => {
 // ========================
 // Update Owner
 // ========================
-// export const updateOwner = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, username, phone, email } = req.body;
-//     const profileUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
+export const updateOwner = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { owner_name, owner_email, owner_phone, owner_address } = req.body;
 
-//     const existing = await getExistingOwner({ email, phone, owner_id: username, excludeId: id });
-//     if (existing) return res.status(400).json({ message: "Email, phone, or username already exists" });
+    // ✅ Step 1: Required fields validation
+    if (!owner_name || !owner_email || !owner_phone || !owner_address) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
 
-//     const updated = await updateOwnerInDB(id, { name, username, phone, email, profile: profileUrl });
-//     if (!updated) return res.status(404).json({ message: "Owner not found" });
+    // ✅ Step 2: Format validations
+    if (!isValidEmail(owner_email)) {
+      console.error("❌ Invalid email format");
+      return res.status(400).json({ message: "Invalid email format" });
+    }
 
-//     res.status(200).json({ message: "Owner updated successfully", owner: updated });
-//   } catch (error) {
-//     console.error("❌ Update Owner Error:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+    if (!isValidPhone(owner_phone)) {
+      console.error("❌ Invalid phone format");
+      return res.status(400).json({ message: "Phone must be 10 digits" });
+    }
+
+    // ✅ Step 3: Check for duplicate email or phone (excluding current owner)
+    const existingOwner = await getExistingOwner({
+      email: owner_email,
+      phone: owner_phone,
+      excludeId: id,
+    });
+
+    if (existingOwner) {
+      if (existingOwner.owner_email === owner_email)
+        return res.status(400).json({ message: "Email already exists" });
+      if (existingOwner.owner_phone === owner_phone)
+        return res.status(400).json({ message: "Phone number already exists" });
+    }
+
+    // ✅ Step 4: Update owner details in DB
+    const updatedOwner = await updateOwnerInDB(id, {
+      owner_name,
+      owner_email,
+      owner_phone,
+      owner_address,
+    });
+
+    if (!updatedOwner)
+      return res.status(404).json({ message: "Owner not found." });
+
+    res.status(200).json({
+      message: "Owner updated successfully.",
+      owner: updatedOwner,
+    });
+  } catch (error) {
+    console.error("❌ Update Owner Error:", error);
+    res.status(500).json({ message: "Server error." });
+  }
+};
+
+
 
 // ========================
 // Toggle Owner Status
@@ -264,25 +333,35 @@ export const toggleOwnerStatus = async (req, res) => {
 };
 
 // ========================
-// Change Owner Password
+// Change Password
 // ========================
-// export const changeOwnerPassword = async (req, res) => {
-//   try {
-//     const { oldPassword, newPassword } = req.body;
-//     const { id } = req.params;
+export const changePassword = async (req, res) => {
+  try {
+    const { phone, newPassword } = req.body;
 
-//     const owner = await getOwnerById(id);
-//     if (!owner) return res.status(404).json({ message: "Owner not found" });
+    if (!phone || !newPassword) {
+      return res.status(400).json({ message: "Phone number and new password are required." });
+    }
 
-//     const isMatch = await bcrypt.compare(oldPassword, owner.password);
-//     if (!isMatch) return res.status(400).json({ message: "Old password is incorrect" });
+    if (!isValidPassword(newPassword)) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
 
-//     const hashedPassword = await bcrypt.hash(newPassword, 10);
-//     await updateOwnerPassword(id, hashedPassword);
+    // ✅ Find owner by phone
+    const owner = await findOwnerByPhone(phone);
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found with this phone number." });
+    }
 
-//     return res.status(200).json({ message: "Password updated successfully" });
-//   } catch (error) {
-//     console.error("Change Owner Password Error:", error.message);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
+    // ✅ Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // ✅ Update in DB
+    await updateOwnerPasswordByPhone(phone, hashedPassword);
+
+    return res.status(200).json({ message: "Password updated successfully!" });
+  } catch (error) {
+    console.error("Change Password Error:", error.message);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+};
