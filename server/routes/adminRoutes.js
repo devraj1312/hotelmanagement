@@ -2,7 +2,7 @@
 import express from 'express';
 import { 
     loginAdmin, logoutAdmin, getAllAdmins, toggleAdminStatus, changePassword,
-    adminDetailsById, registerAdmin, uploadProfile,removeAdminProfile,updateAdmin
+    adminDetailsById, registerAdmin, uploadProfile,updateAdmin
 // refreshToken, deleteAdmin
 } from '../controllers/admin/authController.js';
 import { requestOtp, verifyOtp } from '../controllers/admin/otpController.js';
@@ -26,7 +26,6 @@ router.put(
   handleUploadErrors,
   uploadProfile
 );
-router.put('/remove-profile/:id', removeAdminProfile);
 
 router.put('/update/:id', updateAdmin);
 router.put('/toggle-status/:id', toggleAdminStatus);

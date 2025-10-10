@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const BASE_URL = "http://localhost:5001"; 
+const BASE_URL = "http://localhost:5001";
 
 const Staff = () => {
   const [staffs, setStaffs] = useState([]);
@@ -22,13 +22,17 @@ const Staff = () => {
     role: "Receptionist",
   });
 
+  // 🔹 Fetch all staff
   const fetchStaffs = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/api/staff/fetch`, { withCredentials: true });
+      const res = await axios.get(`${BASE_URL}/api/staff/fetch`, {
+        withCredentials: true,
+      });
       setStaffs(res.data);
     } catch (err) {
       console.error(err);
+      toast.error("Failed to fetch staff list");
     } finally {
       setLoading(false);
     }
@@ -38,46 +42,47 @@ const Staff = () => {
     fetchStaffs();
   }, []);
 
+  // 🔹 Add new staff
   const handleAddStaff = async (staffData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      console.log("Access Token:", token); 
       if (!token) {
         toast.error("Login expired or token missing");
         return;
       }
 
       const res = await axios.post(`${BASE_URL}/api/staff/register`, staffData, {
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        withCredentials: false,
       });
 
       if (res.status === 200 || res.status === 201) {
         toast.success("Staff added successfully!");
         fetchStaffs();
         setShowModal(false);
-        setNewStaff({
-          name: "",
-          phone: "",
-          email: "",
-          address: "",
-          password: "",
-          role: "",
-        });
+        resetStaffForm();
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add staff");
     }
   };
 
+  // 🔹 Update staff details
   const handleUpdateStaff = async (id, staffData) => {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("Login expired or token missing");
+        return;
+      }
+
       const res = await axios.put(`${BASE_URL}/api/staff/update/${id}`, staffData, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (res.status === 200) {
@@ -91,33 +96,63 @@ const Staff = () => {
     }
   };
 
+  // 🔹 Toggle staff active/inactive
   const handleToggleStatus = async (id) => {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("Login expired or token missing");
+        return;
+      }
+
       const res = await axios.put(
         `${BASE_URL}/api/staff/toggle-status/${id}`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
-      toast.success(res.data.message);
+
+      toast.success(res.data.message || "Status updated successfully!");
       fetchStaffs();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Server Error");
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        toast.error("Unauthorized! Please login again.");
+      } else {
+        toast.error(err.response?.data?.message || "Something went wrong");
+      }
     }
   };
 
-  // const handleEditStaff = (staff) => {
-  //   setNewStaff({
-  //     name: staff.name || "",
-  //     phone: staff.phone || "",
-  //     email: staff.email || "",
-  //     address: staff.address || "",
-  //     password: "", // Password should be empty on edit
-  //     role: staff.role || "Receptionist",
-  //     staff_id: staff.staff_id, // Keep the ID for update
-  //   });
-  //   setEditMode(true);
-  //   setShowModal(true);
-  // };
+  // 🔹 Open modal to edit staff
+  const handleEditStaff = (staff) => {
+    setNewStaff({
+      staff_id: staff.staff_id,
+      name: staff.staff_name || "",
+      phone: staff.staff_phone || "",
+      email: staff.staff_email || "",
+      address: staff.staff_address || "",
+      password: "",
+      role: staff.staff_role || "Receptionist",
+    });
+    setEditMode(true);
+    setShowModal(true);
+  };
+
+  // 🔹 Reset staff form
+  const resetStaffForm = () => {
+    setNewStaff({
+      name: "",
+      phone: "",
+      email: "",
+      address: "",
+      password: "",
+      role: "Receptionist",
+    });
+  };
 
   return (
     <div className="staff-page container-fluid p-2">
@@ -125,18 +160,11 @@ const Staff = () => {
         <h2>🧑‍💼 Staffs</h2>
         <Button
           variant="success"
-          size="md"
+          size="lg"
           onClick={() => {
+            resetStaffForm();
             setShowModal(true);
             setEditMode(false);
-            setNewStaff({
-              name: "",
-              phone: "",
-              email: "",
-              address: "",
-              password: "",
-              role: "Receptionist",
-            });
           }}
         >
           Add Staff
@@ -156,6 +184,7 @@ const Staff = () => {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
+              <th>Address</th>
               <th>Role</th>
               <th>Status</th>
               <th>Actions</th>
@@ -164,25 +193,21 @@ const Staff = () => {
           <tbody>
             {staffs.length ? (
               staffs.map((staff) => {
-                const isActive = staff.status === true || staff.status === 1;
+                const isActive = staff.staff_status === true || staff.staff_status === 1;
                 return (
                   <tr key={staff.staff_id}>
                     <td>{staff.staff_id}</td>
                     <td>{staff.staff_name}</td>
                     <td>{staff.staff_email}</td>
                     <td>{staff.staff_phone}</td>
+                    <td>{staff.staff_address}</td>
                     <td>{staff.staff_role}</td>
                     <td>{isActive ? "Active" : "Inactive"}</td>
                     <td className="d-flex gap-2">
                       <Button
                         variant="warning"
                         size="md"
-                        onClick={() => handleUpdateStaff(staff.staff_id, {
-                          name: staff.staff_name,
-                          phone: staff.staff_phone,
-                          email: staff.staff_email,
-                          role: staff.staff_role,
-                        })}
+                        onClick={() => handleEditStaff(staff)}
                       >
                         Update
                       </Button>
@@ -191,7 +216,7 @@ const Staff = () => {
                         size="md"
                         onClick={() => handleToggleStatus(staff.staff_id)}
                       >
-                        {isActive ? "Deactivate" : "Activate"}
+                        {isActive ? "Inactivate" : "Activate"}
                       </Button>
                     </td>
                   </tr>
@@ -199,7 +224,7 @@ const Staff = () => {
               })
             ) : (
               <tr>
-                <td colSpan="7" className="text-center">
+                <td colSpan="8" className="text-center">
                   No staffs found
                 </td>
               </tr>
@@ -219,17 +244,6 @@ const Staff = () => {
         handleAddStaff={handleAddStaff}
         handleUpdateStaff={handleUpdateStaff}
         editMode={editMode}
-      />
-       <ToastContainer 
-        position="top-right" 
-        autoClose={3000} 
-        hideProgressBar={false} 
-        newestOnTop={false} 
-        closeOnClick 
-        rtl={false} 
-        pauseOnFocusLoss 
-        draggable 
-        pauseOnHover 
       />
     </div>
   );

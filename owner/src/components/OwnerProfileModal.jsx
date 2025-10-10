@@ -1,26 +1,26 @@
-// src/components/ProfileModal.jsx
 import React from "react";
 import "../styles/components/profileModal.scss";
 
-const ProfileModal = ({ show, handleClose, admin }) => {
+const OwnerProfileModal = ({ show, handleClose, owner }) => {
   if (!show) return null;
+   // ✅ Correct place for debugging
+//   console.log("Owner Data:", owner);
 
   return (
     <div className="custom-modal-backdrop">
       <div className="custom-modal">
         <div className="modal-header">
-          <h5>Admin Profile</h5>
+          <h5>Owner Profile</h5>
         </div>
 
         <div className="modal-body">
-          {admin ? (
+          {owner ? (
             <div>
-              <p><strong>ID:</strong> {admin.admin_id}</p>
-              <p><strong>Name:</strong> {admin.admin_name}</p>
-              <p><strong>Email:</strong> {admin.admin_email}</p>
-              <p><strong>Phone:</strong> {admin.admin_phone}</p>
-              <p><strong>Role:</strong> {admin.admin_role}</p>
-              <p><strong>Status:</strong> {admin.admin_status ? "Active" : "Inactive"}</p>
+              <p><strong>ID:</strong> {owner.owner_id}</p>
+              <p><strong>Name:</strong> {owner.owner_name}</p>
+              <p><strong>Email:</strong> {owner.owner_email}</p>
+              <p><strong>Phone:</strong> {owner.owner_phone}</p>
+              <p><strong>Address:</strong> {owner.owner_address}</p>
             </div>
           ) : (
             <p>Loading...</p>
@@ -37,4 +37,4 @@ const ProfileModal = ({ show, handleClose, admin }) => {
   );
 };
 
-export default ProfileModal;
+export default OwnerProfileModal;

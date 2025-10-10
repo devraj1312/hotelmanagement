@@ -6,7 +6,7 @@ import AddAdminModal from "./AddAdminModal";
 import ChangePasswordModal from "./ChangePasswordModal"; 
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-// import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
@@ -115,13 +115,13 @@ const Header = () => {
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => setShowUploadModal(true)}>
-                Upload Profile
+                UPLOAD PROFILE
               </Dropdown.Item>
               <Dropdown.Item onClick={() => setShowEditModal(true)}>
-                Update Details
+                UPDATE DETAILS
               </Dropdown.Item>
               <Dropdown.Item onClick={() => setShowChangePassword(true)}>
-                Change Password
+                CHANGE PASSWORD
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

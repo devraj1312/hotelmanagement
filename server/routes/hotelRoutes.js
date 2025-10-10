@@ -4,6 +4,8 @@ import {
   registerHotel,
   fetchAllHotels,
   updateSubscriptionDB,
+  fetchHotelsByOwner,
+  updateHotelByOwner,
 //   removeHotel,
 //   updateHotelStatus,
 } from "../controllers/hotel/hotelController.js";
@@ -21,6 +23,8 @@ router.post(
   registerHotel
 );
 router.get("/fetch-hotels", fetchAllHotels);
+router.get("/fetch-hotels/:ownerId", fetchHotelsByOwner);
+router.put("/update/:ownerId", updateHotelByOwner);
 router.put("/updateSubscription/:hotel_id", updateSubscriptionDB);
 // router.get("/:id", fetchHotelById);
 // router.delete("/:id", removeHotel);

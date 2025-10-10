@@ -2,21 +2,39 @@
 import { adminDB } from '../config/db.js';
 import { generateHotelId, generateHotelCode } from '../helpers/HotelHelpers.js';
 
-export const getExistingHotel = async ({ hotel_email, hotel_phone, license_no, excludeId }) => {
-  const values = [hotel_email, hotel_phone, license_no];
 
-  let query = `
-    SELECT * FROM hotels
-    WHERE (hotel_email = $1 OR hotel_phone = $2 OR license_no = $3)
-  `;
+export const getExistingHotel = async ({ hotel_email, hotel_phone, license_no, excludeId }) => {
+  const conditions = [];
+  const values = [];
+  let idx = 1;
+
+  if (hotel_email) {
+    conditions.push(`LOWER(hotel_email) = LOWER($${idx++})`);
+    values.push(hotel_email.trim());
+  }
+
+  if (hotel_phone) {
+    conditions.push(`hotel_phone = $${idx++}`);
+    values.push(hotel_phone.trim());
+  }
+
+  if (license_no) {
+    conditions.push(`hotel_license_no = $${idx++}`);
+    values.push(license_no.trim());
+  }
+
+  if (conditions.length === 0) return null;
+
+  // ✅ Exclude all hotels of the current owner
+  let query = `SELECT * FROM hotels WHERE (${conditions.join(" OR ")})`;
 
   if (excludeId) {
-    query += ` AND hotel_id != $4`;
-    values.push(excludeId);
+    query += ` AND owner_id != $${idx++}`;
+    values.push(excludeId); // ✅ excludeId is ownerId here
   }
 
   const result = await adminDB.query(query, values);
-  return result.rows[0] || null;
+  return result.rows.length ? result.rows[0] : null;
 };
 
 
@@ -63,6 +81,15 @@ export const getAllHotels = async () => {
   return result.rows;
 };
 
+// ✅ Query hotels by owner_id
+export const getHotelsByOwner = async (ownerId) => {
+  const result = await adminDB.query(
+    "SELECT * FROM hotels WHERE owner_id = $1 ORDER BY created_at DESC",
+    [ownerId]
+  );
+  return result.rows;
+};
+
 // Hotel update query - only subscription update
 export const updateHotelById = async (hotelId, subscription) => {
   const query = `
@@ -77,6 +104,24 @@ export const updateHotelById = async (hotelId, subscription) => {
   const values = [subscription, hotelId];
   const result = await adminDB.query(query, values);
   return result.rows[0];
+};
+
+// queries/hotelQueries.js
+export const updateHotel = async ({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail }) => {
+  const query = `
+    UPDATE hotels
+    SET hotel_name = $1,
+        hotel_phone = $2,
+        hotel_address = $3,
+        hotel_email = $4,
+        updated_at = NOW()
+    WHERE owner_id = $5
+    RETURNING *;
+  `;
+
+  const values = [hotelName, hotelPhone, hotelAddress, hotelEmail, ownerId];
+  const result = await adminDB.query(query, values);
+  return result.rows[0]; // ✅ Return updated hotel
 };
 
 

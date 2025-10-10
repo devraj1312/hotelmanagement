@@ -1,0 +1,30 @@
+@use "../variables" as *;
+@use "./modal";
+@use "sass:color";
+
+/* Extra styles specific to UploadProfileModal */
+.upload-profile-modal {
+  .upload-box {
+    border: 2px dashed $color-border;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background: color.scale($color-background, $lightness: 6%); 
+
+    &:hover {
+      border-color: $color-accent;
+      background: color.scale($color-background, $lightness: 9%);
+    }
+
+    .upload-icon {
+      font-size: 40px;
+      color: $color-accent;
+      margin-bottom: 10px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      color: $color-text;
+    }
+  }
+}
