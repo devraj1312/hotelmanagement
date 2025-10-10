@@ -1,4 +1,4 @@
-import { getExistingStaff, addStaffToHotel, getAllStaffsFromHotel,
+import { getExistingStaff, addStaffToHotel, getAllStaffsFromHotel, getHotelByOwner,
   updateStaffInHotel, toggleStaffStatusInDB } from "../../models/Staff.js";
 import { isValidEmail, isValidPhone } from '../../utils/validators.js';
 import bcrypt from 'bcryptjs';
@@ -8,6 +8,8 @@ import bcrypt from 'bcryptjs';
  */
 export const addStaff = async (req, res) => {
   try {
+    const { ownerId } = req.params;
+    console.log("Owner ID:", ownerId);
     const { name, phone, email, role, password, address } = req.body;
 
     // ✅ Validation checks
@@ -38,6 +40,14 @@ export const addStaff = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // 🔹 Fetch hotel of this owner
+    const hotel = await getHotelByOwner(ownerId);
+    if (!hotel) {
+      return res.status(400).json({ message: "Owner has no hotel" });
+    }
+
+    const hotel_id = hotel.hotel_id; 
+
     const staff_id = await addStaffToHotel({
       staff_name: name,
       staff_phone: phone,
@@ -45,6 +55,7 @@ export const addStaff = async (req, res) => {
       staff_role: role,
       staff_address: address,
       staff_password: hashedPassword,
+      hotel_id,
     });
 
     // ✅ Return response
