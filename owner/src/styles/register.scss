@@ -95,7 +95,7 @@
       font-weight: 500;
       cursor: pointer;
       border: none;
-      font-size: 1rem;
+      font-size: 1.2rem;
       transition: background 0.3s ease, opacity 0.3s;
 
       &:hover {
@@ -122,7 +122,7 @@
 
       &.update {
         padding: 8px 16px;
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
     }
   }

@@ -91,16 +91,16 @@ const Header = () => {
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => setShowUploadModal(true)}>
-                Upload Profile
+                UPLOAD PROFILE
               </Dropdown.Item>
               <Dropdown.Item onClick={() => setShowEditModal(true)}>
-                Update Details
+                UPDATE DETAILS
               </Dropdown.Item>
               <Dropdown.Item onClick={() => setShowChangePassword(true)}>
-                Change Password
+                CHANGE PASSWORD
               </Dropdown.Item>
               <Dropdown.Item onClick={() => setShowHotelModal(true)}>
-                {hasHotel ? "Update Hotel" : "Add Hotel"}
+                {hasHotel ? "UPDATE HOTEL" : "ADD HOTEL"}
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

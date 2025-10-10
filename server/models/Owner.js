@@ -115,8 +115,6 @@ export const updateOwnerInDB = async (owner_id, { owner_name, owner_email, owner
   return result.rowCount ? result.rows[0] : null;
 };
 
-
-
 // ========================
 // Toggle Owner Status
 // ========================

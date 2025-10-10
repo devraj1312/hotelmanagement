@@ -1,7 +1,6 @@
 import express from "express";
 import { registerOwner, loginOwner, logoutOwner, getAllOwners,uploadProfile, changePassword,
     toggleOwnerStatus, ownerDetailsById, updateOwner} from "../controllers/owner/authController.js";
-// import { upload } from '../middlewares/uploadMiddleware.js';
 import { requestOtp, verifyOtp } from '../controllers/owner/otpController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 import { upload, handleUploadErrors } from '../middlewares/uploadMiddleware.js';

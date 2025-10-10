@@ -308,8 +308,6 @@ export const updateOwner = async (req, res) => {
   }
 };
 
-
-
 // ========================
 // Toggle Owner Status
 // ========================
