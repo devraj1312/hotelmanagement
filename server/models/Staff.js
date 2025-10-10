@@ -21,6 +21,26 @@ export const getExistingStaff = async ({ email, phone, excludeId }) => {
 };
 
 /**
+ * Fetch hotels for a given owner
+ */
+export const getHotelByOwner = async (ownerId) => {
+  try {
+    const result = await adminDB.query(
+      `SELECT hotel_id 
+       FROM hotels 
+       WHERE owner_id = $1
+       LIMIT 1`,
+      [ownerId]
+    );
+
+    return result.rows[0] || null;
+  } catch (err) {
+    console.error("getHotelByOwner error:", err.message || err);
+    throw err;
+  }
+};
+
+/**
  * Inserts a new staff into the hotel DB
  */
 export const addStaffToHotel = async ({
@@ -30,15 +50,16 @@ export const addStaffToHotel = async ({
   staff_role,
   staff_address,
   staff_password,
+  hotel_id,
 }) => {
   // Generate staff ID like ST001
   const staff_id = await generateStaffId(adminDB);
 
   const result = await adminDB.query(
     `INSERT INTO staff (
-      staff_id, staff_name, staff_phone, staff_email, staff_role, staff_address, staff_password
+      staff_id, staff_name, staff_phone, staff_email, staff_role, staff_address, staff_password,  hotel_id
     )
-    VALUES ($1,$2,$3,$4,$5,$6,$7)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
     RETURNING staff_id`,
     [
       staff_id,        // $1
@@ -48,6 +69,7 @@ export const addStaffToHotel = async ({
       staff_role,      // $5
       staff_address,   // $6
       staff_password,  // $7
+      hotel_id,       // $8
     ]
   );
 

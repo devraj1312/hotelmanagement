@@ -70,10 +70,9 @@ CREATE TABLE IF NOT EXISTS owners (
 );
 
 -- Indexes for faster lookup
-CREATE INDEX IF NOT EXISTS idx_owner_email ON owners(email);
-CREATE INDEX IF NOT EXISTS idx_owner_phone ON owners(phone);
-CREATE INDEX IF NOT EXISTS idx_owner_status ON owners(status);
-CREATE INDEX IF NOT EXISTS idx_owner_document_type ON owners(document_type);
+CREATE INDEX IF NOT EXISTS idx_owner_email ON owners(owner_email);
+CREATE INDEX IF NOT EXISTS idx_owner_phone ON owners(owner_phone);
+CREATE INDEX IF NOT EXISTS idx_owner_status ON owners(owner_status);
 
 
 -- ============================================
@@ -101,7 +100,7 @@ CREATE TABLE IF NOT EXISTS hotels (
 -- Indexes for faster lookup
 CREATE INDEX IF NOT EXISTS idx_hotel_owner_id ON hotels(owner_id);
 CREATE INDEX IF NOT EXISTS idx_hotel_email ON hotels(hotel_email);
-CREATE INDEX IF NOT EXISTS idx_hotel_phone ON hotels(phone);
+CREATE INDEX IF NOT EXISTS idx_hotel_phone ON hotels(hotel_phone);
 CREATE INDEX IF NOT EXISTS idx_hotel_license_no ON hotels(license_no);
 CREATE INDEX IF NOT EXISTS idx_hotel_code ON hotels(hotel_code);
 CREATE INDEX IF NOT EXISTS idx_hotel_subscription ON hotels(subscription);
@@ -109,19 +108,27 @@ CREATE INDEX IF NOT EXISTS idx_hotel_subscription ON hotels(subscription);
 
 
 -- ============================================
--- Staff Table Schema (with ST001 style IDs and prefixed columns)
+-- Staff Table Schema (with hotel_id FK)
 -- ============================================
 CREATE TABLE IF NOT EXISTS staff (
-    staff_id VARCHAR(10) PRIMARY KEY,            -- custom ID like ST001
+    staff_id VARCHAR(10) PRIMARY KEY,               -- custom ID like ST001
     staff_name VARCHAR(100) NOT NULL,
     staff_phone VARCHAR(10) UNIQUE CHECK (staff_phone ~ '^[0-9]{10}$'),
     staff_email VARCHAR(100) UNIQUE,
     staff_address TEXT,
-    staff_role VARCHAR(50),                      -- Manager / Receptionist / etc.
-    staff_password VARCHAR(255) NOT NULL,        -- hashed password
-    staff_status BOOLEAN NOT NULL DEFAULT TRUE,  -- true = active, false = inactive
+    staff_role VARCHAR(50),                         -- Manager / Receptionist / etc.
+    staff_password VARCHAR(255) NOT NULL,           -- hashed password
+    staff_status BOOLEAN NOT NULL DEFAULT TRUE,     -- true = active, false = inactive
+    hotel_id VARCHAR(10),                           -- foreign key to hotels table
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- ✅ Table-level foreign key constraint
+    CONSTRAINT fk_staff_hotel
+      FOREIGN KEY (hotel_id)
+      REFERENCES hotels(hotel_id)
+      ON UPDATE CASCADE
+      ON DELETE SET NULL
 );
 
 -- Indexes for faster lookup
@@ -129,5 +136,5 @@ CREATE INDEX IF NOT EXISTS idx_staff_email ON staff(staff_email);
 CREATE INDEX IF NOT EXISTS idx_staff_phone ON staff(staff_phone);
 CREATE INDEX IF NOT EXISTS idx_staff_status ON staff(staff_status);
 CREATE INDEX IF NOT EXISTS idx_staff_role ON staff(staff_role);
-
+CREATE INDEX IF NOT EXISTS idx_staff_hotel ON staff(hotel_id);
 

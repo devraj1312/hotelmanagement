@@ -3,8 +3,9 @@ import "../styles/staff.scss";
 import { Button, Table, Spinner } from "react-bootstrap";
 import AddStaffModal from "../components/AddStaffModal";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+import { jwtDecode } from "jwt-decode";
 
 const BASE_URL = "http://localhost:5001";
 
@@ -42,7 +43,7 @@ const Staff = () => {
     fetchStaffs();
   }, []);
 
-  // 🔹 Add new staff
+  // Add new staff
   const handleAddStaff = async (staffData) => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -51,7 +52,10 @@ const Staff = () => {
         return;
       }
 
-      const res = await axios.post(`${BASE_URL}/api/staff/register`, staffData, {
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id;
+
+      const res = await axios.post(`${BASE_URL}/api/staff/register/${ownerId}`, staffData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

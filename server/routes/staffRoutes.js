@@ -6,7 +6,7 @@ import { addStaff, fetchStaffs, updateStaff, toggleStaffStatus } from "../contro
 const router = express.Router();
 
 // Add staff (with optional document upload)
-router.post("/register", addStaff);
+router.post("/register/:ownerId", addStaff);
 router.get("/fetch", fetchStaffs);
 router.put("/update/:id", updateStaff);
 router.put('/toggle-status/:id', toggleStaffStatus);
