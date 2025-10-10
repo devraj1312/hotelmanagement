@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Add staff (with optional document upload)
 router.post("/register/:ownerId", addStaff);
-router.get("/fetch", fetchStaffs);
+router.get("/fetch/:ownerId", fetchStaffs);
 router.put("/update/:id", updateStaff);
 router.put('/toggle-status/:id', toggleStaffStatus);
 
