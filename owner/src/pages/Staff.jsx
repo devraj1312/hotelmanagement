@@ -26,8 +26,17 @@ const Staff = () => {
   // 🔹 Fetch all staff
   const fetchStaffs = async () => {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("Login expired or token missing");
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id;
+
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/api/staff/fetch`, {
+      const res = await axios.get(`${BASE_URL}/api/staff/fetch/${ownerId}`, {
         withCredentials: true,
       });
       setStaffs(res.data);

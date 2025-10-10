@@ -75,7 +75,17 @@ export const addStaff = async (req, res) => {
  */
 export const fetchStaffs = async (req, res) => {
   try {
-    const staffs = await getAllStaffsFromHotel(); // Fetch all staff records
+    const { ownerId } = req.params;
+    // 🔹 Fetch hotel of this owner
+    const hotel = await getHotelByOwner(ownerId);
+    if (!hotel) {
+      return res.status(400).json({ message: "Owner has no hotel" });
+    }
+
+    const hotel_id = hotel.hotel_id;
+
+    // Fetch staff with this hotel_id
+    const staffs = await getAllStaffsFromHotel(hotel_id);
 
     return res.status(200).json(staffs);
 

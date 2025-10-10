@@ -80,11 +80,13 @@ export const addStaffToHotel = async ({
 /**
  * Get all staff records from hotel database
  */
-export const getAllStaffsFromHotel = async () => {
+export const getAllStaffsFromHotel = async (hotelId) => {
   const result = await adminDB.query(
     `SELECT staff_id, staff_name, staff_phone, staff_email, staff_role, staff_status, staff_address
      FROM staff
-     ORDER BY staff_name ASC`
+     WHERE hotel_id = $1
+     ORDER BY staff_name ASC`,
+    [hotelId]
   );
   return result.rows;
 };
