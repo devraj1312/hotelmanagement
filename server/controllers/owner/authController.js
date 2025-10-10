@@ -108,9 +108,6 @@ export const registerOwner = async (req, res) => {
     // 🔹 Hash password
     const hashedPassword = await hashPassword(password);
 
-    // 🔹 Profile image if uploaded
-    const profileUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
     // 🔹 Create Owner
     const ownerId = await createOwner({
       name,
@@ -118,7 +115,6 @@ export const registerOwner = async (req, res) => {
       email,
       address,
       password: hashedPassword,
-      profile: profileUrl
     });
 
     return res.status(201).json({
@@ -129,7 +125,6 @@ export const registerOwner = async (req, res) => {
         owner_phone: phone,
         owner_email: email,
         owner_address: address,
-        owner_profile: profileUrl
       }
     });
 

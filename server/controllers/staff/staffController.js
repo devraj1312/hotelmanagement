@@ -9,7 +9,6 @@ import bcrypt from 'bcryptjs';
 export const addStaff = async (req, res) => {
   try {
     const { ownerId } = req.params;
-    console.log("Owner ID:", ownerId);
     const { name, phone, email, role, password, address } = req.body;
 
     // ✅ Validation checks
