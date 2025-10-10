@@ -19,7 +19,7 @@ export const getExistingHotel = async ({ hotel_email, hotel_phone, license_no, e
   }
 
   if (license_no) {
-    conditions.push(`hotel_license_no = $${idx++}`);
+    conditions.push(`license_no = $${idx++}`);
     values.push(license_no.trim());
   }
 
