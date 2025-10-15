@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 import { Button } from "react-bootstrap";
 import profile from "../assets/images/admin.jpg";
 import ProfileModal from "./OwnerProfileModal"; 
+import { X } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
   const [owner, setOwner] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // ✅ Fetch Current Owner Details
   useEffect(() => {
     const fetchOwner = async () => {
       try {
@@ -29,7 +29,6 @@ const Sidebar = () => {
             withCredentials: true,
           }
         );
-        // console.log("Fetched owner:", res.data);
         setOwner(res.data);
       } catch (error) {
         console.error("❌ Failed to fetch owner:", error);
@@ -39,7 +38,6 @@ const Sidebar = () => {
     fetchOwner();
   }, []);
 
-  // ✅ Logout Function
   const handleLogout = async () => {
     try {
       const res = await axios.post(
@@ -60,88 +58,107 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="sidebar">
-      {/* ✅ Owner Profile Section */}
-      <div className="sidebar-logo text-center">
-        <img
-          src={owner?.owner_profile ? `http://localhost:5001${owner.owner_profile}` : profile}
-          alt="Owner Profile"
-          className="rounded-circle"
+    <>      
+      {/* 🔹 Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay d-lg-none"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      <aside className={`sidebar ${sidebarOpen ? "sidebar--open" : ""}`}>
+        {/* Close icon on mobile */}
+        <div className="d-flex d-lg-none justify-content-end">
+          <button className="btn text-white mb-2" onClick={() => setSidebarOpen(false)}>
+            <X size={26} />  
+
+          </button>
+        </div>
+
+        {/* Profile Section */}
+        <div className="sidebar-logo">
+          <img
+            src={
+              owner?.owner_profile
+                ? `http://localhost:5001${owner.owner_profile}`
+                : profile
+            }
+            alt="Owner Profile"
+          />
+          {owner ? (
+            <>
+              <h2>{owner.owner_name}</h2>
+              <p className="text">Hotel Owner</p>
+              <Button
+                variant="success"
+                size="lg"
+                className="mt-3 w-100"
+                onClick={() => setShowModal(true)}
+              >
+                <i className="bi bi-person-lines-fill"></i> View Profile
+              </Button>
+            </>
+          ) : (
+            <h2>Owner Panel</h2>
+          )}
+        </div>
+
+        {/* Nav Links */}
+        <nav>
+          <ul>
+            <li>
+              <NavLink to="/dashboard" className="menu-link" onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-speedometer2"></i> Dashboard
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/finance"
+                className="menu-link"
+                onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-currency-rupee"></i> Finance & Reports
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/booking" className="menu-link" onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-calendar-check"></i> Booking Overview
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/staff" className="menu-link" onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-people"></i> Staff Overview
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/maintenance" className="menu-link" onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-tools"></i> Maintenance
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/reviews" className="menu-link" onClick={() => setSidebarOpen(false)}>
+                <i className="bi bi-star"></i> Reviews
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+
+        <Button
+          variant="danger"
+          size="lg"
+          className="m-3 w-80 btn-full-width"
+          onClick={handleLogout}
+        >
+          <i className="bi bi-box-arrow-right"></i> Logout
+        </Button>
+
+        <ProfileModal
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          owner={owner}
         />
-
-        {owner ? (
-          <>
-            <h2 className="mt-2">{owner.owner_name}</h2>
-            <p className="text">Hotel Owner</p>
-
-            {/* ✅ View Profile Button */}
-            <Button
-              variant="success"
-              size="lg"
-              className="mt-3 w-100"
-              onClick={() => setShowModal(true)}
-            >
-              <i className="bi bi-person-lines-fill"></i> View Profile
-            </Button>
-          </>
-        ) : (
-          <h2>Owner Panel</h2>
-        )}
-      </div>
-
-      {/* ✅ Navigation Menu */}
-      <nav>
-        <ul>
-          <li>
-            <NavLink to="/dashboard" className="menu-link">
-              <i className="bi bi-speedometer2"></i> Dashboard
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/finance" className="menu-link">
-              <i className="bi bi-currency-rupee"></i> Finance & Reports
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/booking" className="menu-link">
-              <i className="bi bi-calendar-check"></i> Booking Overview
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/staff" className="menu-link">
-              <i className="bi bi-people"></i> Staff Overview
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/maintenance" className="menu-link">
-              <i className="bi bi-tools"></i> Maintenance
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/reviews" className="menu-link">
-              <i className="bi bi-star"></i> Reviews
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-
-      {/* ✅ Logout Button (Bootstrap Style) */}
-      <Button
-        variant="danger"
-        size="lg"
-        className="m-3 w-80"
-        onClick={handleLogout}
-      >
-        <i className="bi bi-box-arrow-right"></i> Logout
-      </Button>
-
-      {/* ✅ Profile Modal */}
-      <ProfileModal
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        owner={owner}
-      />
-    </aside>
+      </aside>
+    </>
   );
 };
 
