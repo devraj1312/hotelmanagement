@@ -37,10 +37,6 @@ export const getExistingAdmin = async ({ admin_id, admin_email, admin_phone, exc
   return result.rows.length ? result.rows[0] : null;
 };
 
-
-
-
-
 // ✅ Create admin
 export const createAdmin = async ({ admin_name, admin_phone, admin_email, admin_password, admin_role }) => {
   const newAdminId = await generateAdminId();

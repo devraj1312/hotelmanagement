@@ -55,8 +55,6 @@ const Clients = () => {
     }
   };
 
-
-
   return (
     <div className="clients-page container-fluid p-2">
       <div className="d-flex justify-content-between align-items-center mb-2">

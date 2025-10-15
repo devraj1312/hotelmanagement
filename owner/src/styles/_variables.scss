@@ -3,9 +3,22 @@ $color-primary: #1f2f46;      // Navy Blue - Sidebar, Header
 $color-accent: #00bfa6;       // Teal - Buttons, highlights
 $color-background: #f5f7fa;   // Light Gray/White - Page background
 $color-text: #333333;         // Dark Gray - Default text
-$color-border: #e0e0e0;       // Light Gray - Borders, dividers
+$color-border: #e0e0e0;   
+$color-surface: #ffffff;      // Light Gray - Borders, dividers
 
-$sidebar-width: 300px;
+// Text Colors
+$color-text: #333333;        // Dark Gray - Default text
+$color-muted: #6b7280;       // Muted Gray - Placeholder or secondary text
+
+// Borders & States
+$color-border: #e0e0e0;      // Light Gray - Borders, dividers
+$color-hover: #00d1b2;       // Slightly brighter teal for hover states
+
+// Action Colors
+$color-danger: #ef4444;      // Red - Delete or logout buttons
+$color-success: #22c55e;     // Green - Success messages or badges
+
+$sidebar-width: 320px;
 $header-height: 60px;
 
 $font-primary: 'Segoe UI', sans-serif;

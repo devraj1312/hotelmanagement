@@ -19,6 +19,29 @@
     border-color: $color-border;
   }
 
+  .table {
+    border: 1px solid $color-border;
+  }
+
+  .btn {
+    padding: 6px 14px; // balanced internal space
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    min-width: 90px; // ensures equal button width
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px color.change($color-accent, $alpha: 0.25);
+    }
+  }
+
   .btn-success {
     background-color: $color-accent;
     border-color: $color-accent;
@@ -30,16 +53,12 @@
   }
 
   .btn-danger {
-    background-color: $color-primary;
-    border-color: $color-primary;
+    background-color: $color-danger;
+    border-color: $color-danger;
 
     &:hover {
-      background-color: color.scale($color-primary, $lightness: -10%);
-      border-color: color.scale($color-primary, $lightness: -10%);
+      background-color: color.scale($color-danger, $lightness: -10%);
+      border-color: color.scale($color-danger, $lightness: -10%);
     }
-  }
-
-  .table {
-    border: 1px solid $color-border;
   }
 }
