@@ -10,6 +10,10 @@
     grid-template-columns: 1fr 1fr 1fr; // 3 equal columns
     gap: 20px;
     align-items: start;
+    @media (max-width: 768px) {
+        display: block;
+      }
+    
   }
 
   .chart-box.small {
@@ -26,6 +30,10 @@
       margin-bottom: 10px;
     }
 
+    @media (max-width: 768px) {
+      width: auto;
+      margin-bottom: 10px;
+    }
     // canvas {
     //   height: 260px !important;
     // }
@@ -130,6 +138,13 @@
         color: $color-accent;
         margin-bottom: 10px;
       }
+      @media (max-width: 768px) {
+        margin-bottom: 10px;
+      }
+    }
+    @media (max-width: 768px) {
+        display: block;
+        margin-top: 15px;
     }
   }
 }
