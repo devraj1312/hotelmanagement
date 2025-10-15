@@ -3,13 +3,14 @@ import { Dropdown, Button, Modal } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { List, X } from "lucide-react";
 
 import AddHotelModal from "./AddHotelModal";
 import UploadProfileModal from "./UploadProfileModal";
 import ChangePasswordModal from "./ChangePasswordModal";
 import Register from "../pages/Register";
 
-const Header = () => {
+const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const [dateTime, setDateTime] = useState(new Date());
   const [showHotelModal, setShowHotelModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -18,6 +19,7 @@ const Header = () => {
   const [owner, setOwner] = useState(null);
   const [hasHotel, setHasHotel] = useState(false);
   const [hotels, setHotels] = useState([]);
+
 
   // Update clock every second
   useEffect(() => {
@@ -70,7 +72,12 @@ const Header = () => {
 
   return (
     <>
-      <header className="header">
+     <header className="header d-lg-flex align-items-center justify-content-between px-3 py-2">
+        <button
+          className="btn text-black d-lg-none"
+          onClick={() => setSidebarOpen(true)}>
+          <List size={26} />
+        </button>
         <h1 className="dashboard-title">Owner Dashboard</h1>
 
         <div className="header-center">
@@ -85,9 +92,15 @@ const Header = () => {
           </div>
 
           <Dropdown>
-            <Dropdown.Toggle as={Button} variant="primary" size="lg" className="settings-btn">
-              <i className="bi bi-gear-fill"></i> Settings
-            </Dropdown.Toggle>
+              {/* 📱 Mobile — icon only */}
+              <Dropdown.Toggle as="div" className="icon-dropdown-btn d-flex d-lg-none">
+                <i className="bi bi-gear-fill"></i>
+              </Dropdown.Toggle>
+
+              {/* 🖥️ Desktop — icon + text */}
+              <Dropdown.Toggle as={Button} variant="primary" size="lg" className="settings-btn d-none d-lg-flex align-items-center gap-2">
+                <i className="bi bi-gear-fill"></i> Settings
+              </Dropdown.Toggle>
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => setShowUploadModal(true)}>
@@ -140,6 +153,7 @@ const Header = () => {
         existingHotel={hasHotel ? hotels[0] : null}
         onHotelChange={fetchOwnerData}
       />
+      
     </>
   );
 };
