@@ -59,7 +59,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>      
-      {/* 🔹 Overlay for mobile */}
+      {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
           className="sidebar-overlay d-lg-none"
@@ -77,7 +77,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         </div>
 
         {/* Profile Section */}
-        <div className="sidebar-logo">
+        <div className="sidebar-logo"
+         onClick={() => {
+        if (window.innerWidth <= 991) setShowModal(true);
+        }}>
           <img
             src={
               owner?.owner_profile
@@ -88,8 +91,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           />
           {owner ? (
             <>
-              <h2>{owner.owner_name}</h2>
-              <p className="text">Hotel Owner</p>
+              <div className="mt-2"><h2>{owner.owner_name}</h2>
+              <p className="text">Hotel Owner</p></div>
               <Button
                 variant="success"
                 size="lg"
@@ -146,7 +149,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         <Button
           variant="danger"
           size="lg"
-          className="m-3 w-80 btn-full-width"
+          className="fs-6 m-3 w-80 btn-full-width"
           onClick={handleLogout}
         >
           <i className="bi bi-box-arrow-right"></i> Logout
