@@ -13,12 +13,12 @@ const AddStaffModal = ({
   useEffect(() => {
     if (!editMode && show) {
       setNewStaff({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
-        password: "",
-        role: "Receptionist",
+        staff_name: "",
+        staff_phone: "",
+        staff_email: "",
+        staff_address: "",
+        staff_password: "",
+        staff_role: "Receptionist",
       });
     }
   }, [editMode, show, setNewStaff]);
@@ -45,14 +45,19 @@ const AddStaffModal = ({
         </div>
 
         <div className="modal-body">
-          {["name", "phone", "email", "address"].map((field) => (
-            <div className="form-group mb-2" key={field}>
-              <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+          {[
+            { label: "Name", key: "staff_name" },
+            { label: "Phone", key: "staff_phone" },
+            { label: "Email", key: "staff_email" },
+            { label: "Address", key: "staff_address" },
+          ].map((field) => (
+            <div className="form-group mb-2" key={field.key}>
+              <label>{field.label}</label>
               <input
                 type="text"
                 className="form-control"
-                name={field}
-                value={newStaff[field] || ""}
+                name={field.key}
+                value={newStaff[field.key] || ""}
                 onChange={handleChange}
               />
             </div>
@@ -64,8 +69,8 @@ const AddStaffModal = ({
               <input
                 type="password"
                 className="form-control"
-                name="password"
-                value={newStaff.password || ""}
+                name="staff_password"
+                value={newStaff.staff_password || ""}
                 onChange={handleChange}
               />
             </div>
@@ -77,8 +82,8 @@ const AddStaffModal = ({
             <div className="select-wrapper">
               <select
                 className="form-control"
-                name="role"
-                value={newStaff.role}
+                name="staff_role"
+                value={newStaff.staff_role}
                 onChange={handleChange}
               >
                 <option value="Manager">Manager</option>

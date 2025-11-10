@@ -52,6 +52,15 @@ export const findOwnerById = async (owner_id) => {
   return rows[0] || null;
 };
 
+// Find Staff by ID
+export const findStaffById = async (staff_id) => {
+  const { rows } = await adminDB.query(
+    `SELECT staff_id, staff_name, staff_role, staff_status, hotel_id FROM staff WHERE staff_id = $1`,
+    [staff_id]
+  );
+  return rows[0] || null;
+};
+
 // Mark OTP as used
 export const markOtpUsed = async (otpId, userId) => {
   await adminDB.query(

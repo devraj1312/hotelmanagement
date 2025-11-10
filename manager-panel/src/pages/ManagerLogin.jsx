@@ -5,13 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import '../styles/login.scss';
 
-const API_BASE = 'http://localhost:5001/api/manager';
+const API_BASE = 'http://localhost:5001/api/staff';
 
 const ManagerLogin = () => {
   const [mode, setMode] = useState('password'); // 'password' | 'otp'
 
   // password mode
-  const [managerID, setManagerID] = useState('');
+  const [staffID, setStaffID] = useState('');
   const [password, setPassword] = useState('');
 
   // otp mode
@@ -32,14 +32,14 @@ const ManagerLogin = () => {
   // Password login
   const handlePasswordLogin = async (e) => {
     e.preventDefault();
-    if (!managerID || !password) {
-      toast.error('Please enter Manager ID and password.');
+    if (!staffID || !password) {
+      toast.error('Please enter Staff ID and password.');
       return;
     }
     try {
       const res = await axios.post(
         `${API_BASE}/login`,
-        { managerID, password },
+        { staff_id: staffID, staff_password: password },
         { withCredentials: true }
       );
 
@@ -49,7 +49,7 @@ const ManagerLogin = () => {
       setTimeout(() => navigate('/manager/dashboard'), 600);
     } catch (err) {
       console.error('Login error:', err);
-      toast.error(err.response?.data?.message || 'Invalid credentials', { autoClose: 1600 });
+      toast.error(err.response?.data?.message || 'Failed to login', { autoClose: 1600 });
     }
   };
 
@@ -102,7 +102,7 @@ const ManagerLogin = () => {
     <div className="login-page">
       <ToastContainer />
       <div className="login-card">
-        <h2>Manager Login</h2>
+        <h2>Staff Login</h2>
 
         <div className="tab-toggle">
           <button className={mode === 'password' ? 'active' : ''} onClick={() => setMode('password')}>
@@ -116,8 +116,8 @@ const ManagerLogin = () => {
         {mode === 'password' ? (
           <form onSubmit={handlePasswordLogin}>
             <div className="form-group">
-              <label>Manager ID</label>
-              <input type="text" placeholder="Enter Manager ID" value={managerID} onChange={(e) => setManagerID(e.target.value)} />
+              <label>Staff ID</label>
+              <input type="text" placeholder="Enter Staff ID" value={staffID} onChange={(e) => setStaffID(e.target.value)} />
             </div>
 
             <div className="form-group">

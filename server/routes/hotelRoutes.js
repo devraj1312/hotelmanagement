@@ -6,6 +6,7 @@ import {
   updateSubscriptionDB,
   fetchHotelsByOwner,
   updateHotelByOwner,
+  hotelDetailsById,
 //   removeHotel,
 //   updateHotelStatus,
 } from "../controllers/hotel/hotelController.js";
@@ -21,10 +22,20 @@ router.post("/register",
   ]),handleUploadErrors,
   registerHotel
 );
+
+router.put(
+  "/update/:ownerId",
+  upload.fields([
+    { name: "hotelImage", maxCount: 1 }, // ✅ only image upload supported
+  ]),
+  handleUploadErrors,
+  updateHotelByOwner
+);
 router.get("/fetch-hotels", fetchAllHotels);
 router.get("/fetch-hotels/:ownerId", fetchHotelsByOwner);
-router.put("/update/:ownerId", updateHotelByOwner);
+// router.put("/update/:ownerId", updateHotelByOwner);
 router.put("/updateSubscription/:hotel_id", updateSubscriptionDB);
+router.get('/details/:id', hotelDetailsById);
 // router.get("/:id", fetchHotelById);
 // router.delete("/:id", removeHotel);
 // router.put("/toggle-status/:id", updateHotelStatus);
