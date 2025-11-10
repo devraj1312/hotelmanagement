@@ -4,33 +4,56 @@ import { generateOwnerId } from '../helpers/ownerHelpers.js';
 // ========================
 // Check if Owner exists by email, phone, or owner_id
 // ========================
-export const getExistingOwner = async ({ email, phone, excludeId }) => {
-  const values = [email, phone];
-  let query = `
-    SELECT * FROM owners
-    WHERE (owner_email = $1 OR owner_phone = $2)
-  `;
+export const getExistingOwner = async ({ owner_id, email, phone, excludeId }) => {
+  let query = `SELECT * FROM owners WHERE `;
+  const values = [];
+  const conditions = [];
 
+  // Case 1️⃣: Lookup by owner_id (for login or direct fetch)
+  if (owner_id) {
+    conditions.push(`owner_id = $${values.length + 1}`);
+    values.push(owner_id);
+  }
+
+  // Case 2️⃣: Lookup by email or phone (for duplicate check)
+  if (email || phone) {
+    const emailOrPhoneConds = [];
+    if (email) {
+      emailOrPhoneConds.push(`owner_email = $${values.length + 1}`);
+      values.push(email);
+    }
+    if (phone) {
+      emailOrPhoneConds.push(`owner_phone = $${values.length + 1}`);
+      values.push(phone);
+    }
+    conditions.push(`(${emailOrPhoneConds.join(" OR ")})`);
+  }
+
+  // Case 3️⃣: Exclude specific owner (during update)
   if (excludeId) {
-    query += ` AND owner_id != $3`;
+    conditions.push(`owner_id != $${values.length + 1}`);
     values.push(excludeId);
   }
+
+  // Final query assembly
+  query += conditions.join(" AND ");
 
   const result = await adminDB.query(query, values);
   return result.rows[0] || null;
 };
 
+
 // ========================
 // Create Owner
 // ========================
-export const createOwner = async ({ name, phone, email, address, password, profile }) => {
+export const createOwner = async ({ name, phone, email, address, password }) => {
   const newOwnerId = await generateOwnerId();
   const result = await adminDB.query(
     `INSERT INTO owners 
-     (owner_id, owner_name, owner_phone, owner_email, owner_address, owner_password, owner_profile)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     (owner_id, owner_name, owner_phone, owner_email, owner_address, owner_password)
+     VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING owner_id`,
-    [newOwnerId, name, phone, email, address, password, profile]
+    [newOwnerId, name, phone, email, address, password]
   );
   return result.rows[0].owner_id;
 };

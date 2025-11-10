@@ -9,17 +9,16 @@ import {
 //   removeHotel,
 //   updateHotelStatus,
 } from "../controllers/hotel/hotelController.js";
-import { upload } from '../middlewares/uploadMiddleware.js';
+import { upload, handleUploadErrors } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
 // 🔹 Routes
-router.post(
-  "/register",
+router.post("/register",
   upload.fields([
     { name: "hotelImage", maxCount: 1 },   // hotel profile image
     { name: "hotelLicenseDoc", maxCount: 1 },  // hotel document (pdf/image)
-  ]),
+  ]),handleUploadErrors,
   registerHotel
 );
 router.get("/fetch-hotels", fetchAllHotels);
