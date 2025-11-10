@@ -107,26 +107,32 @@ export const updateHotelById = async (hotelId, subscription) => {
 };
 
 // queries/hotelQueries.js
-export const updateHotel = async ({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail }) => {
+export const updateHotel = async ({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail, hotel_image }) => {
   const query = `
     UPDATE hotels
     SET hotel_name = $1,
         hotel_phone = $2,
         hotel_address = $3,
         hotel_email = $4,
+        hotel_image = $5,
         updated_at = NOW()
-    WHERE owner_id = $5
+    WHERE owner_id = $6
     RETURNING *;
   `;
 
-  const values = [hotelName, hotelPhone, hotelAddress, hotelEmail, ownerId];
+  const values = [hotelName, hotelPhone, hotelAddress, hotelEmail, hotel_image, ownerId];
   const result = await adminDB.query(query, values);
   return result.rows[0]; // ✅ Return updated hotel
 };
 
 
-// export const getHotelById = async (hotel_id) => {
-//   const result = await pool.query("SELECT * FROM hotels WHERE hotel_id = $1", [hotel_id]);
-//   return result.rows[0];
-// };
-
+// ========================
+// Get Hotel by ID
+// ========================
+export const getHotelById = async (id) => {
+  const result = await adminDB.query(
+    `SELECT * FROM hotels WHERE hotel_id = $1`,
+    [id]
+  );
+  return result.rows[0] || null;
+};

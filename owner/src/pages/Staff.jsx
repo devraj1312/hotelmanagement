@@ -4,7 +4,6 @@ import { Button, Table, Spinner } from "react-bootstrap";
 import AddStaffModal from "../components/AddStaffModal";
 import axios from "axios";
 import { toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
 import { jwtDecode } from "jwt-decode";
 
 const BASE_URL = "http://localhost:5001";
@@ -15,22 +14,19 @@ const Staff = () => {
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [newStaff, setNewStaff] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-    password: "",
-    role: "Receptionist",
+    staff_name: "",
+    staff_phone: "",
+    staff_email: "",
+    staff_address: "",
+    staff_password: "",
+    staff_role: "Receptionist",
   });
 
   // 🔹 Fetch all staff
   const fetchStaffs = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        toast.error("Login expired or token missing");
-        return;
-      }
+      if (!token) return toast.error("Login expired or token missing");
 
       const decoded = jwtDecode(token);
       const ownerId = decoded.id;
@@ -52,24 +48,25 @@ const Staff = () => {
     fetchStaffs();
   }, []);
 
-  // Add new staff
+  // 🔹 Add new staff
   const handleAddStaff = async (staffData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        toast.error("Login expired or token missing");
-        return;
-      }
+      if (!token) return toast.error("Login expired or token missing");
 
       const decoded = jwtDecode(token);
       const ownerId = decoded.id;
 
-      const res = await axios.post(`${BASE_URL}/api/staff/register/${ownerId}`, staffData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post(
+        `${BASE_URL}/api/staff/register/${ownerId}`,
+        staffData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (res.status === 200 || res.status === 201) {
         toast.success("Staff added successfully!");
@@ -86,17 +83,18 @@ const Staff = () => {
   const handleUpdateStaff = async (id, staffData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        toast.error("Login expired or token missing");
-        return;
-      }
+      if (!token) return toast.error("Login expired or token missing");
 
-      const res = await axios.put(`${BASE_URL}/api/staff/update/${id}`, staffData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.put(
+        `${BASE_URL}/api/staff/update/${id}`,
+        staffData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (res.status === 200) {
         toast.success("Staff updated successfully!");
@@ -113,18 +111,13 @@ const Staff = () => {
   const handleToggleStatus = async (id) => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        toast.error("Login expired or token missing");
-        return;
-      }
+      if (!token) return toast.error("Login expired or token missing");
 
       const res = await axios.put(
         `${BASE_URL}/api/staff/toggle-status/${id}`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
@@ -144,12 +137,12 @@ const Staff = () => {
   const handleEditStaff = (staff) => {
     setNewStaff({
       staff_id: staff.staff_id,
-      name: staff.staff_name || "",
-      phone: staff.staff_phone || "",
-      email: staff.staff_email || "",
-      address: staff.staff_address || "",
-      password: "",
-      role: staff.staff_role || "Receptionist",
+      staff_name: staff.staff_name || "",
+      staff_phone: staff.staff_phone || "",
+      staff_email: staff.staff_email || "",
+      staff_address: staff.staff_address || "",
+      staff_password: "",
+      staff_role: staff.staff_role || "Receptionist",
     });
     setEditMode(true);
     setShowModal(true);
@@ -158,12 +151,12 @@ const Staff = () => {
   // 🔹 Reset staff form
   const resetStaffForm = () => {
     setNewStaff({
-      name: "",
-      phone: "",
-      email: "",
-      address: "",
-      password: "",
-      role: "Receptionist",
+      staff_name: "",
+      staff_phone: "",
+      staff_email: "",
+      staff_address: "",
+      staff_password: "",
+      staff_role: "Receptionist",
     });
   };
 
@@ -206,7 +199,8 @@ const Staff = () => {
           <tbody>
             {staffs.length ? (
               staffs.map((staff) => {
-                const isActive = staff.staff_status === true || staff.staff_status === 1;
+                const isActive =
+                  staff.staff_status === true || staff.staff_status === 1;
                 return (
                   <tr key={staff.staff_id}>
                     <td>{staff.staff_id}</td>

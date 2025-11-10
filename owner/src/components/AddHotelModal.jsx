@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -72,24 +72,25 @@ const AddHotelModal = ({ show, handleClose, owner, hasHotel, existingHotel, onHo
 
     try {
       setLoading(true);
-
       let response;
 
       if (hasHotel) {
-        // ✅ Update mode -> use JSON, not FormData
+        // ✅ Update Mode with optional Image Upload
+        const formData = new FormData();
+        formData.append("hotelName", hotelData.hotelName);
+        formData.append("hotelEmail", hotelData.hotelEmail);
+        formData.append("hotelPhone", hotelData.hotelPhone);
+        formData.append("hotelAddress", hotelData.hotelAddress);
+        if (hotelImage) formData.append("hotelImage", hotelImage);
+
         response = await axios.put(
           `http://localhost:5001/api/hotel/update/${hotelData.ownerId}`,
-          {
-            hotelName,
-            hotelEmail,
-            hotelPhone,
-            hotelAddress,
-          },
-          { headers: { "Content-Type": "application/json" } }
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
         toast.success("Hotel updated successfully!");
       } else {
-        // ✅ Add mode -> use FormData for file uploads
+        // ✅ Add mode -> requires License document
         if (!hotelLicenseDoc) {
           toast.error("Please upload a Hotel License");
           setLoading(false);
@@ -102,7 +103,7 @@ const AddHotelModal = ({ show, handleClose, owner, hasHotel, existingHotel, onHo
         });
 
         if (hotelImage) formData.append("hotelImage", hotelImage);
-        if (hotelLicenseDoc) formData.append("hotelLicenseDoc", hotelLicenseDoc);
+        formData.append("hotelLicenseDoc", hotelLicenseDoc);
 
         response = await axios.post(
           "http://localhost:5001/api/hotel/register",
@@ -121,7 +122,6 @@ const AddHotelModal = ({ show, handleClose, owner, hasHotel, existingHotel, onHo
       setLoading(false);
     }
   };
-
 
   return (
     <div className="custom-modal-backdrop">
@@ -203,27 +203,28 @@ const AddHotelModal = ({ show, handleClose, owner, hasHotel, existingHotel, onHo
                   </div>
                 )}
               </div>
-
-              <div className="form-group mb-2">
-                <label>Hotel Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="form-control"
-                  onChange={handleImageChange}
-                />
-                {hotelImage && (
-                  <div className="mt-2">
-                    <img
-                      src={URL.createObjectURL(hotelImage)}
-                      alt="Hotel Preview"
-                      style={{ width: "100px", height: "100px", borderRadius: "8px", objectFit: "cover" }}
-                    />
-                  </div>
-                )}
-              </div>
             </>
           )}
+
+          {/* ✅ Image upload visible in both modes */}
+          <div className="form-group mb-2">
+            <label>Hotel Image {hasHotel && <small>(optional)</small>}</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="form-control"
+              onChange={handleImageChange}
+            />
+            {hotelImage && (
+              <div className="mt-2">
+                <img
+                  src={URL.createObjectURL(hotelImage)}
+                  alt="Hotel Preview"
+                  style={{ width: "100px", height: "100px", borderRadius: "8px", objectFit: "cover" }}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="modal-footer">

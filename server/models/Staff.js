@@ -4,20 +4,38 @@ import { adminDB } from '../config/db.js';
 // ========================
 // Check if Staff exists by email, phone, or staff_id
 // ========================
-export const getExistingStaff = async ({ email, phone, excludeId }) => {
-  const values = [email, phone];
-  let query = `
-    SELECT * FROM staff
-    WHERE (staff_email = $1 OR staff_phone = $2)
-  `;
+export const getExistingStaff = async ({ staff_id, staff_email, staff_phone, excludeId }) => {
+  const conditions = [];
+  const values = [];
+  let idx = 1;
+
+  if (staff_id) {
+    conditions.push(`staff_id = $${idx++}`);
+    values.push(String(staff_id).trim());
+  }
+
+  if (staff_email) {
+    conditions.push(`LOWER(staff_email) = LOWER($${idx++})`);
+    values.push(String(staff_email).trim());
+  }
+
+  if (staff_phone) {
+    conditions.push(`staff_phone = $${idx++}`);
+    values.push(String(staff_phone).trim());
+  }
+
+  // nothing to check
+  if (conditions.length === 0) return null;
+
+  let query = `SELECT * FROM staff WHERE (${conditions.join(' OR ')})`;
 
   if (excludeId) {
-    query += ` AND staff_id != $3`;
+    query += ` AND staff_id != $${idx++}`;
     values.push(excludeId);
   }
 
   const result = await adminDB.query(query, values);
-  return result.rows[0] || null;
+  return result.rows.length ? result.rows[0] : null;
 };
 
 /**
@@ -133,4 +151,27 @@ export const toggleStaffStatusInDB = async (id) => {
     [id]
   );
   return result.rows[0];
+};
+
+// ========================
+// Get Admin by ID
+// ========================
+export const getStaffById = async (id) => {
+  const result = await adminDB.query(
+    `SELECT 
+       staff_id, 
+       staff_name, 
+       staff_phone, 
+       staff_email, 
+       staff_role, 
+       staff_address, 
+       hotel_id, 
+       created_at, 
+       updated_at
+     FROM staff
+     WHERE staff_id = $1`,
+    [id]
+  );
+
+  return result.rows[0] || null;
 };

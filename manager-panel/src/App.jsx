@@ -18,8 +18,7 @@ import AddExpense from "./pages/Expenses/AddExpense";
 import HotelProfile from "./pages/Settings/HotelProfile";
 
 import Login from "./pages/ManagerLogin";
-// import Register from "./pages/Register";
-// import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./styles/styles.scss";
 import { ToastContainer } from "react-toastify";
@@ -31,10 +30,9 @@ const App = () => {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/register" element={<Register />} /> */}
 
-        {/* Protected routes */}
-        {/* <Route
+        {/* Protected routes: only accessible when logged in */}
+        <Route
           element={
             <ProtectedRoute>
               <ManagerLayout />
@@ -45,35 +43,7 @@ const App = () => {
           <Route path="/manager/rooms" element={<RoomList />} />
           <Route path="/manager/rooms/add" element={<AddRoom />} />
           <Route path="/manager/rooms/edit/:id" element={<EditRoom />} />
-          
-          <Route path="/manager/staff" element={<StaffList />} />
-          <Route path="/manager/staff/add" element={<AddStaff />} />
-          <Route path="/manager/staff/edit/:id" element={<EditStaff />} />
 
-          <Route path="/manager/bookings" element={<BookingList />} />
-          <Route path="/manager/book-room" element={<BookRoom />} />
-
-          <Route path="/manager/maintenance" element={<MaintenanceList />} />
-          <Route path="/manager/tickets" element={<TicketList />} />
-
-          <Route path="/manager/expenses" element={<ExpenseList />} />
-          <Route path="/manager/expenses/add" element={<AddExpense />} />
-
-          <Route path="/manager/settings" element={<HotelProfile />} />
-
-          <Route path="*" element={<Navigate to="/manager/dashboard" replace />} />
-        </Route> */}
-      
-        <Route
-          element={
-              <ManagerLayout />
-          }
-        >
-          <Route path="/manager/dashboard" element={<Dashboard />} />
-          <Route path="/manager/rooms" element={<RoomList />} />
-          <Route path="/manager/rooms/add" element={<AddRoom />} />
-          <Route path="/manager/rooms/edit/:id" element={<EditRoom />} />
-          
           <Route path="/manager/staff" element={<StaffList />} />
           <Route path="/manager/staff/add" element={<AddStaff />} />
           <Route path="/manager/staff/edit/:id" element={<EditStaff />} />
@@ -92,6 +62,17 @@ const App = () => {
           <Route path="*" element={<Navigate to="/manager/dashboard" replace />} />
         </Route>
 
+        {/* If user hits root, redirect to dashboard if logged in else to login */}
+        {/* <Route
+          path="/"
+          element={
+            localStorage.getItem('accessToken') ? (
+              <Navigate to="/manager/dashboard" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        /> */}
       </Routes>
 
       <ToastContainer position="top-right" autoClose={3000} />
