@@ -6,7 +6,7 @@ import {
   updateHotelById,
   getHotelsByOwner,
   updateHotel,
-//   getHotelById,
+  getHotelById,
 } from "../../models/Hotel.js";
 
 import { 
@@ -128,6 +128,8 @@ export const updateHotelByOwner = async (req, res) => {
   const { ownerId } = req.params;
   const { hotelName, hotelPhone, hotelAddress, hotelEmail } = req.body;
 
+  const hotel_image = req.files?.hotelImage ? req.files.hotelImage[0].filename : null;
+
   try {
     // ✅ Validation
     if (!hotelName || !hotelPhone || !hotelAddress || !hotelEmail) {
@@ -161,7 +163,7 @@ export const updateHotelByOwner = async (req, res) => {
     }
 
     // ✅ Call query function
-    const updatedHotel = await updateHotel({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail });
+    const updatedHotel = await updateHotel({ ownerId, hotelName, hotelPhone, hotelAddress, hotelEmail, hotel_image });
 
     if (!updatedHotel) {
       return res.status(404).json({ success: false, message: "Hotel not found for this owner" });
@@ -175,17 +177,22 @@ export const updateHotelByOwner = async (req, res) => {
 };
 
 
-// export const fetchHotelById = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const hotel = await getHotelById(id);
-//     if (!hotel) return res.status(404).json({ success: false, message: "Hotel not found" });
-//     res.status(200).json({ success: true, hotel });
-//   } catch (error) {
-//     console.error("Error fetching hotel:", error.message);
-//     res.status(500).json({ success: false, message: "Failed to fetch hotel" });
-//   }
-// };
+// ========================
+// Get Hotel by ID
+// ========================
+export const hotelDetailsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const hotel = await getHotelById(id);
+
+    if (!hotel) return res.status(404).json({ message: 'Hotel not found' });
+
+    res.json(hotel);
+  } catch (error) {
+    console.error('❌ HotelDetailsById Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 export const updateSubscriptionDB = async (req, res) => {
   try {
