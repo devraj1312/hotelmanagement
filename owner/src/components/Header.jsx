@@ -92,12 +92,12 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
 
           <Dropdown>
-              {/* 📱 Mobile — icon only */}
+              {/*  Mobile — icon only */}
               <Dropdown.Toggle as="div" className="icon-dropdown-btn d-flex d-lg-none">
                 <i className="bi bi-gear-fill"></i>
               </Dropdown.Toggle>
 
-              {/* 🖥️ Desktop — icon + text */}
+              {/*  Desktop — icon + text */}
               <Dropdown.Toggle as={Button} variant="primary" size="lg" className="settings-btn d-none d-lg-flex align-items-center gap-2">
                 <i className="bi bi-gear-fill"></i> Settings
               </Dropdown.Toggle>
